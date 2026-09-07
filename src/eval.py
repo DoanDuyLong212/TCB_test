@@ -19,8 +19,20 @@ KEY_NUMBERS = {
 }
 
 
+def _norm(s: str) -> str:
+    """Chuẩn hoá biến thể Unicode KHÔNG đổi nghĩa số (defensible):
+    - hyphen variety (U+2010/2011/2012/2013/2212) -> '-': 'BB‑' == 'BB-'
+    - khoảng trắng giữa số và %: '40,4 %' == '40,4%'
+    - non-breaking space -> space."""
+    for ch in ("‑", "‑", "\u2010", "\u2011", "\u2012", "\u2013", "\u2212"):
+        s = s.replace(ch, "-")
+    s = s.replace("\u00A0", " ")
+    s = re.sub(r"(\d)\s+%", r"\1%", s)
+    return s
+
+
 def contains_key_number(answer: str, key: str) -> bool:
-    return key.lower() in answer.lower()
+    return _norm(key.lower()) in _norm(answer.lower())
 
 
 def is_refusal(answer: str) -> bool:
@@ -45,15 +57,17 @@ def citations_valid(cited: list[int], keys: list[str]) -> bool:
             if pg in cited:
                 page_text[pg] = page_text.get(pg, "") + "\n" + c.get("text", "")
         return all(
-            any(k.lower() in page_text.get(pg, "").lower() for pg in cited)
+            any(_norm(k.lower()) in _norm(page_text.get(pg, "").lower()) for pg in cited)
             for k in keys
         )
     except Exception:
         return False
 
 
-def judge_llm(question: str, gold: str, pred: str) -> dict:
-    """Gemini judge. Returns {verdict: correct|partial|wrong, reason}."""
+def judge_llm(question: str, gold: str, pred: str,
+              provider: str = "gemini") -> dict:
+    """LLM judge. provider='gemini'|'groq'. Returns {verdict, reason}."""
+    from src.config import get_settings
     from src.llm import chat_complete
 
     prompt = (f"Câu hỏi: {question}\nĐáp án chuẩn: {gold}\nTrả lời hệ thống: {pred}\n"
@@ -64,10 +78,12 @@ def judge_llm(question: str, gold: str, pred: str) -> dict:
     try:
         text, usage = chat_complete(
             [{"role": "user", "content": prompt}], max_tokens=50, temperature=0.0)
+        model = usage.get("model") or provider
     except Exception as e:
-        return {"verdict": "error", "reason": str(e)[:100]}
+        return {"verdict": "error", "reason": str(e)[:100], "model": provider}
     m = re.search(r"(correct|partial|wrong)", text.lower())
-    return {"verdict": m.group(1) if m else "wrong", "reason": text[:200]}
+    return {"verdict": m.group(1) if m else "wrong", "reason": text[:200],
+            "model": model}
 
 
 def score_batch(golds: list[dict], preds: list[dict], use_judge: bool = False) -> dict:

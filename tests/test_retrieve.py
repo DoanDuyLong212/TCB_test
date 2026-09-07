@@ -11,6 +11,22 @@ def test_followup_rewrite():
     assert "2024" in q or "tong tai san" in q.lower()
 
 
+def test_followup_chain_two_floors():
+    # chuỗi 3 lượt: 2025 -> 2024 -> 2023 (dùng câu gần nhất CÓ năm, không chỉ history[-1])
+    q = rewrite("còn 2023 thì sao?", history=["Tổng tài sản 2025?", "Tỷ lệ CASA 2024?"])
+    assert "2023" in q and "CASA" in q, q
+
+
+def test_followup_explicit_year_targets_last_subject():
+    q = rewrite("còn 2023 thì sao?", history=["Dư nợ Khối Bán lẻ 2025 là bao nhiêu?"])
+    assert "2023" in q and "Bán lẻ" in q, q
+
+
+def test_followup_no_year_falls_back_concat():
+    q = rewrite("còn dư nợ thì sao?", history=["CASA là gì?"])
+    assert "dư nợ" in q.lower(), q
+
+
 def test_hybrid_returns_printed_4_for_sq01():
     hits = search("Tính đến năm 2025, Techcombank có bao nhiêu chi nhánh và phòng giao dịch, và hiện diện tại bao nhiêu tỉnh thành?", k=5)
     pages = [h["printed_page"] for h in hits]

@@ -6,7 +6,7 @@ import re
 
 import numpy as np
 
-from src.build_index import tokenize_vi
+from src.build_index import _strip_vi, tokenize_vi
 from src.glossary import load_glossary
 
 CHUNKS: list[dict] | None = None
@@ -66,19 +66,53 @@ def expand_query(query: str) -> str:
     return query
 
 
+_FOLLOWUP_RE = re.compile(
+    r"còn(?![a-zà-ỹ])|con\s+|thì sao|thi sao|năm trước|nam truoc|cũng vậy|cung vay",
+    re.I,
+)
+
+
 def rewrite(query: str, history: list[str] | None = None) -> str:
-    """Resolve follow-ups like 'con nam truoc thi sao?' using last question."""
-    history = history or []
+    """Resolve follow-ups ('còn năm trước thì sao?', 'còn 2023?') dùng history.
+
+    v2: dùng TOÀN BỘ history (chuỗi 3 lượt 2025→2024→2023 vẫn đúng),
+    hỗ trợ năm tường minh trong follow-up, fallback LLM-rewrite khi
+    regex không tìm được ngữ cảnh.
+    """
+    history = [h for h in (history or []) if h]
     ql = query.lower()
-    if history and re.search(r"còn|con\b.*(trước|truoc)|thì sao|thi sao|năm trước|nam truoc", ql):
-        last = history[-1]
-        m = re.search(r"(20\d{2})", last)
-        if m:
-            prev_year = str(int(m.group(1)) - 1)
-            subject = re.sub(r"(20\d{2})", prev_year, last)
-            return f"{subject} | follow-up: {query}"
-        return f"{last} | follow-up: {query}"
-    return query
+    if not (history and _FOLLOWUP_RE.search(ql)):
+        return query
+    # tìm câu hỏi gần nhất CÓ năm làm chủ đề
+    subject = None
+    for prev in reversed(history):
+        if re.search(r"(20\d{2})", prev):
+            subject = prev
+            break
+    if subject is None:
+        subject = history[-1]
+    m_target = re.search(r"(20\d{2})", query)
+    m_subject = re.search(r"(20\d{2})", subject)
+    if m_subject:
+        base_year = int(m_subject.group(1))
+        target_year = int(m_target.group(1)) if m_target else base_year - 1
+        subject = re.sub(r"(20\d{2})", str(target_year), subject)
+        return f"{subject} | follow-up: {query}"
+    # regex không dựng được ngữ cảnh → LLM rewrite (1 call rẻ), fail thì concat
+    try:
+        from src.llm import chat_complete
+
+        text, _ = chat_complete([{
+            "role": "user",
+            "content": ("Viết lại câu hỏi theo sau thành MỘT câu hỏi hoàn chỉnh "
+                        "bằng tiếng Việt (không thêm gì khác).\n"
+                        f"Lịch sử: {' | '.join(history[-3:])}\nCâu hỏi theo sau: {query}"),
+        }], max_tokens=120, temperature=0.0)
+        if text.strip():
+            return text.strip()
+    except Exception:
+        pass
+    return f"{subject} | follow-up: {query}"
 
 
 def _embed_query(text: str) -> np.ndarray | None:
@@ -136,14 +170,15 @@ def search(query: str, k: int = 5, history: list[str] | None = None) -> list[dic
     # Không cắt pool: bonus (bigram/date/section) phải tới được mọi ứng viên.
     # 377 docs nên re-rank toàn bộ vẫn rẻ (<0.1s).
     ranked = sorted(scores.items(), key=lambda x: x[1], reverse=True)
-    # exact-bigram bonus: reward docs containing query phrases verbatim
-    qlow = q.lower()
+    # exact-bigram bonus: so sánh trong KHÔNG GIAN KHÔNG DẤU để query gõ
+    # thiếu dấu vẫn được thưởng như query có dấu (đo: unacc 4/8 -> 7/8).
+    qlow = _strip_vi(q.lower())
     words = re.findall(r"\w+", qlow)
     bigrams = {" ".join(words[i:i + 2]) for i in range(len(words) - 1)}
-    key_figure = bool(re.search(r"bao nhiêu|tỷ lệ|tăng|tổng|doanh thu|%", qlow))
+    key_figure = bool(re.search(r"bao nhieu|tỷ lệ|ty le|tăng|tang|tổng|tong|doanh thu|%", qlow))
     boosted: list[tuple[str, float]] = []
     for cid, s in ranked:
-        tlow = _ID2CHUNK[cid]["text"].lower()
+        tlow = _strip_vi(_ID2CHUNK[cid]["text"].lower())
         hits = sum(1 for b in bigrams if len(b) > 4 and b in tlow)
         s = s + 0.005 * min(hits, 8)
         # exact-date bonus: "31/12/2025" nguyên chuỗi >> "31"+"tháng 12"+"2025" rời rạc
@@ -154,7 +189,7 @@ def search(query: str, k: int = 5, history: list[str] | None = None) -> list[dic
         # section-prior: câu hỏi số tổng hợp -> ưu tiên mục Điểm nhấn/Kết quả
         # nổi bật (infographic tóm tắt, vd tr.5) thay vì thuyết minh BCTC dài.
         # +0.05 đủ vượt nhiễu TF của doc dài (đo ở eval/ablation_a.py).
-        if key_figure and ("điểm nhấn" in tlow or "kết quả nổi bật" in tlow):
+        if key_figure and ("diem nhan" in tlow or "ket qua noi bat" in tlow):
             s += 0.05
         boosted.append((cid, s))
     ranked = sorted(boosted, key=lambda x: x[1], reverse=True)[:k]

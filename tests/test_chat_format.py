@@ -1,4 +1,11 @@
-from src.chat import build_prompt, extract_citations
+from src.chat import build_prompt, extract_citations, normalize_citations
+
+
+def test_normalize_bracket_citations():
+    # gpt-oss dự phòng hay xuất fullwidth brackets
+    assert normalize_citations("【tr. 386】") == "[tr. 386]"
+    out = normalize_citations("CASA là Tiền gửi không kỳ hạn 【tr. 386, 387】")
+    assert extract_citations(out) == [386, 387]
 
 
 def test_prompt_requires_citations_and_vietnamese():

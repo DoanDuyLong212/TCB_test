@@ -19,6 +19,9 @@ _TOKEN_RE = re.compile(r"[\w%,.]+", re.UNICODE)
 def _strip_vi(text: str) -> str:
     import unicodedata
 
+    # 'Đ/đ' (U+0110) là ký tự ghép sẵn, NFD KHÔNG tách được → phải thay thủ công
+    # (bẫy thật: 'Điểm nhấn' -> 'Điem nhan', check 'diem nhan' luôn False).
+    text = text.replace("đ", "d").replace("Đ", "D")
     return "".join(
         c for c in unicodedata.normalize("NFD", text) if unicodedata.category(c) != "Mn"
     )

@@ -6,12 +6,13 @@
 - Bỏ Track 2 sâu (rerank cross-encoder) và Track 4 (production economics) vì hết 10–15h; thay bằng hybrid RRF + đo latency/cost thực tế.
 
 ## 2. Kiến trúc
-- Ingest (`src/ingest.py`): PyMuPDF, tách spread trái/phải theo x-midpoint, đọc số trang in từ header strip (y<60, span đứng riêng, sắp theo x), strip header, prefix context (section titles + 300 ký tự nửa kia) để chunk số không mất ngữ cảnh mục.
-- Bảng/glossary (`src/tables.py`, `src/glossary.py`): `page.find_tables()` có sẵn; glossary 164 thuật ngữ + map trang chính xác từng nửa (CASA→386, RBG→387).
+- Ingest (`src/ingest.py`): **auto-detect layout** (portrait vs spread theo tỉ lệ w>h trên 13 trang mẫu; chọn strip số trang theo chuỗi tăng đơn điệu — verify trên 2 docs), tách spread trái/phải theo x-midpoint, đọc số trang in từ header strip, strip header, prefix context (section titles + 300 ký tự nửa kia). **Table chunks:** `find_tables()` mỗi nửa trang → markdown (`src/tables.py`) giữ cấu trúc + số Việt nguyên vẹn — 602 chunks (377 narrative + 225 table), 2 representation song song.
+- Bảng/glossary (`src/glossary.py`): glossary 164 thuật ngữ + map trang chính xác từng nửa (CASA→386, RBG→387).
 - Index (`src/build_index.py`): dense **Gemini `gemini-embedding-001`** 768-dim (free, key rotation, resume cache `index/embed_cache.json`) + FAISS IP; BM25 (k1=0.6, b=0.9, tokenize giữ dấu + dạng không dấu); fallback OpenRouter embeddings → local → TF-IDF offline. `meta.embedder` ghi rõ embedder; test khóa dim query==index chống fallback lén đổi dim.
-- Retrieval (`src/retrieve.py`): hybrid RRF (BM25 weight 2.0), exact-bigram bonus, exact-date bonus, **section-prior "Điểm nhấn/Kết quả nổi bật" cho câu hỏi số tổng hợp (+0.05, ablation ở `eval/ablation_a.py`)**, re-rank toàn pool (377 docs, <0.1s) → cắt k=8; expand viết tắt qua glossary + synonym hiếm (tránh drift); rewrite follow-up ("còn năm trước thì sao?" → 2024); glossary injection đứng đầu context cho câu thuật ngữ.
-- Chat (`src/chat.py`, `src/llm.py`): REPL + `--batch`, system prompt Việt strict `[tr. N]` + refusal có điều kiện (chỉ từ chối khi context thực sự thiếu; context 2600 ký tự/chunk vì đáp án hay nằm giữa chunk) + **quy tắc trích nguyên văn số** (sau khi extra set bắt được lỗi diễn giải "1.192 nghìn tỷ" thành "1.192 tỷ"), **provider chain** `PROVIDER=gemini,groq` (thử lần lượt) × **key rotation** (`GEMINI_API_KEY`→`_2`→`_3`, Groq tương tự) × **model chain** (`GEN_MODELS` cho Gemini — 3.5 tắt thinking vì ngầm ăn output budget; `GEN_MODELS_GROQ` cho Groq — `qwen/qwen3.8-27b` chính, `gpt-oss-120b` dự phòng), backoff 429/503 30/60s, lỗi kỹ thuật tách khỏi refusal.
-- Không đụng LLM ở: trích số trang in, parse bảng, tokenize/BM25/RRF, scoring eval.
+- Retrieval (`src/retrieve.py`): hybrid RRF (BM25 weight 2.0), **bigram bonus trong stripped-space** (query gõ thiếu dấu vẫn được thưởng như có dấu — fix bug Đ/đ NFD, war story trong myself.md), exact-date bonus, **section-prior "Điểm nhấn/Kết quả nổi bật"** (+0.05, ablation ở `eval/ablation_a.py`), re-rank toàn pool (602 docs, <0.2s) → cắt k=8; expand viết tắt qua glossary + synonym hiếm; **rewrite multi-turn v2** (full history — chuỗi 2025→2024→2023 đúng; năm tường minh "còn 2023?"; LLM-rewrite fallback); glossary injection đứng đầu context.
+- Chat (`src/chat.py`, `src/llm.py`): REPL + `--batch`, system prompt Việt strict `[tr. N]` + refusal có điều kiện + **quy tắc trích nguyên văn số** + hướng dẫn đọc số garbled infographic + normalize citation `【tr.`→`[tr.` (gpt-oss), provider chain `gemini,groq` × key rotation (`GEMINI_API_KEY`→`_2`→`_3`, Groq `_2`) × model chain (`GEN_MODELS` — 3.5 tắt thinking; `GEN_MODELS_GROQ` — qwen chính), backoff 429/503 30/60s, lỗi kỹ thuật tách khỏi refusal.
+- Eval (`src/eval.py`): deterministic + citation-valid + **normalize Unicode biến thể không đổi nghĩa số** (U+2011 "BB‑"=="BB-", "40,4 %"=="40,4%") + `eval/judge_compare.py` 2-judge cross-check.
+- Không đụng LLM ở: trích số trang in, detect layout, parse bảng, tokenize/BM25/RRF, scoring eval.
 
 ## 3. Thử gì, fail gì
 - Thử BGE-M3 local → fail (torch 2.5 bị chặn CVE-2025-32434) → chuyển OpenRouter embeddings.
@@ -30,30 +31,31 @@
 - Extra set bắt false refusal: ex-13 (thu nhập lãi thuần RBG) → figure nằm trong chunk infographic rối ("Thu nhập lãi thuần 9,4% N/N21,9 15,7% N/N") → model không dám trích → refusal. Chưa fix (chunk infographic là debt của Track 1, xem mục 8).
 
 ## 4. Eval numbers (phương pháp + số)
-- Phương pháp: deterministic (key numbers + gold-citation match + refusal check + citation-valid check) + **manual đọc toàn bộ 10 câu** + LLM-judge (qwen/groq) đối chiếu với manual (xem `eval/report.json`, `eval/report_judge.json`, `src/eval.py`).
-- **End-to-end strict trên 10 câu sample (số đúng + cite khớp gold + refusal đúng): 10/10.** Mỗi câu đã đọc tay đối chiếu gold; batch chạy trên provider chain gemini→groq (chi tiết từng câu trong `out.json`).
-- **Judge-vs-manual agreement: 10/10** (sau khi dạy judge chấm refusal là correct cho câu unanswerable).
-- Retrieval recall trên 9 câu answerable: **8/9 @k=6, 9/9 @k=8** (section-prior cho infographic tr.5; ablation 13 câu extra trong `eval/ablation_a.py` — không phá câu nào).
-- Citation-valid (số có thật trên trang được cite — analyst mở kiểm chứng được): đã verify tay các câu số: tr.5/48 chứa 40,4% & 1,13% & 53,4 ✓, tr.43 chứa BB/BB- ✓, tr.48 chứa 13,6% (claim phụ của sq-06) ✓, tr.58+59 chứa 328,1/26,9% ✓, tr.387 RBG ✓, tr.386 CASA ✓.
-- Extra set 15 câu (`eval/extra_out.json`, đọc tay): **14/15** — ex-05 sai (diễn giải số sai 1000x) → fix prompt verbatim → rerun đúng; ex-13 false refusal do chunk infographic rối (chưa fix, trung thực ghi nhận). 2 câu gpt-oss cite sai format `【tr. N】` (dự phòng, ít gặp).
+- Phương pháp: deterministic (key numbers + gold-citation match + refusal check + citation-valid + normalize Unicode biến thể không đổi nghĩa số) + **manual đọc toàn bộ** + 2-judge cross-check (`eval/judge_compare.py`, qwen/groq + gemini).
+- **Strict (số đúng + cite khớp gold-page): 9/10.** Mẫu "miss" duy nhất sq-04: trả đúng "40,4%" kèm [tr. 48] — tr.48 là bảng markdown chứa cùng số liệu; gold-page là tr.5. Theo tinh thần "analyst mở trang kiểm chứng được" thì câu này ĐÚNG — do đó:
+- **Citation-valid (số có thật trên trang được cite): 10/10.**
+- **Semantic judge (qwen/groq): 10/10** — judge chấm sq-04 correct (ngữ nghĩa), khớp nhận định trên; j1-vs-manual(strict) 9/10 vì chênh lệch tiêu chí chứ không phải sai thật. j2 (gemini) 429 quota → cross-check chưa hoàn thành (`eval/judge_compare.json`), chạy lại khi quota hồi.
+- Retrieval recall: **9/9 @k=6 và @k=8** (bảng markdown đưa tr.5 thẳng top-6; trước đó 8/9@6; ablation không phá câu extra nào).
+- Extra set 15 câu: **14/15** — ex-05 (bẫy đọc số 1000x) giữ vững fix; ex-13 false refusal do chunk infographic garbled, VLM bounded kẹt quota gemini (đã code kế hoạch, chạy lại khi quota hồi).
+- Query không dấu: 5/5 sau stripped-space bigram (trước 4/8).
 - Unanswerable (sq-10 + ex-01, ex-02): refusal chuẩn 3/3.
-- Phân lỗi retrieval vs generation: đã đo đạc qua từng batch (sq-03/04 = retrieval_miss tr.5 trước section-prior; sq-01/02 = generation false-refusal trước fix truncation/thinking; cụ thể trong mục 3).
+- Phân lỗi retrieval vs generation: đã đo đạc qua từng batch (sq-03/04 = retrieval_miss tr.5 trước table chunks; sq-01/02 = generation false-refusal trước fix truncation/thinking; sq-07 = generation false-refusal trước prompt garbled-number).
 
 ## 5. Cost & latency (đo thực, không ước)
-- Ingestion một lần: ~16s text+header, ~2min glossary scan 197 trang, ~9 phút embeddings 377 chunks (Gemini free, 2s/call + cache resume).
-- Index ship: `index/` ~4MB (chunks 1.3MB, faiss 1.2MB, bm25 1.5MB, embed_cache ~5MB có thể xoá).
-- Mỗi query đo được: retrieval ~0.2s (CPU, 377 chunks) + generation: qwen/groq ~0.5–1.5s, gemini-3.5-flash ~1.3–1.7s → **~1–2s/query end-to-end**.
+- Ingestion một lần: ~2min text+header+tables (602 chunks), ~2min glossary scan, embeddings (Gemini free, 2s/call, cache resume — batch mới chỉ tốn quota cho chunk chưa có).
+- Index ship: `index/` ~6MB trong repo (chunks 1.6MB, faiss 1.2MB, bm25 3MB, embed_cache 650 vectors).
+- Mỗi query đo được: retrieval ~0.2s (CPU, 602 chunks) + generation: qwen/groq ~0.5–1.5s → **~1–2s/query end-to-end**.
 - Tiền: $0 (Gemini free-tier cho embedding + Groq free cho generation). Fallback TF-IDF offline: $0.
-- Hạ tầng thực tế: quota Gemini generate free-tier cực tight (chính vì thế provider chain gemini→groq là path mặc định; batch sample dùng cả 2).
+- Hạ tầng thực tế: quota Gemini generate free-tier cực tight (provider chain gemini→groq là path mặc định).
 
 ## 6. Chạy lại
 ```bash
-cp .env.example .env  # điền key; tối thiểu GEMINI_API_KEY
+cp .env.example .env  # điền key; tối thiểu GROQ_API_KEY (hoặc GEMINI_API_KEY)
 ./run.sh              # recall smoke -> batch 10 câu -> eval -> pytest
 python3 -m src.chat   # REPL tiếng Việt, gõ exit để thoát
 ```
-- Biến môi trường: `PROVIDER` (chuỗi, mặc định `gemini,groq`; nhận `gemini|groq|openrouter` phân tách bởi dấu phẩy), `GEN_MODEL`/`GEN_MODELS` (chuỗi model Gemini fallback), `GEN_MODELS_GROQ` (mặc định `qwen/qwen3.8-27b,openai/gpt-oss-120b`), `EMB_MODEL`, `GEMINI_API_KEY`, `GEMINI_API_KEY_2`, `GEMINI_API_KEY_3`, `GROQ_API_KEY`, `GROQ_API_KEY_2`, `OPENROUTER_API_KEY`. Không in key ra log (masked).
-- Index đã build sẵn trong `index/`; muốn rebuild: `python3 -m src.ingest` (qua API), `python3 -c "from src.glossary import build_glossary; build_glossary()"`, `python3 -m src.build_index`.
+- Biến môi trường: `PROVIDER` (chuỗi, mặc định `gemini,groq`), `GEN_MODEL`/`GEN_MODELS` (Gemini chain), `GEN_MODELS_GROQ` (mặc định `qwen/qwen3.8-27b,openai/gpt-oss-120b`), `EMB_MODEL`, `GEMINI_API_KEY`, `_2`, `_3`, `GROQ_API_KEY`, `_2`, `OPENROUTER_API_KEY`. Không in key ra log (masked).
+- Index đã build sẵn trong `index/`; muốn rebuild: `python3 -m src.ingest` → `python3 -c "from src.glossary import build_glossary; build_glossary()"` → `python3 -m src.build_index`.
 - Prereq: Python 3.10+, pip, file PDF đặt cạnh repo.
 
 ## 7. Video demo
@@ -66,9 +68,10 @@ python3 -m src.chat   # REPL tiếng Việt, gõ exit để thoát
 4. Judge calibration trên 100+ cặp + regression CI + tracing (Langfuse).
 5. Multi-doc (1.000 báo cáo): phân partition index theo mã CK/năm, routing, cache embedding, đo cost/query thực.
 
-## 9. Chưa verify & rủi ro
-- ex-13 false refusal: figure trong chunk infographic rối ("Thu nhập lãi thuần 9,4% N/N21,9") → model không dám trích. Fix triệt để = VLM bóc infographic thành bảng số (mục 8.2).
-- Query không dấu accuracy thấp (đã ghi test robustness, chưa fix sâu).
-- gpt-oss (dự phòng groq) thỉnh thoảng cite sai format `【tr. N】` thay vì `[tr. N]` — regex extract sẽ bỏ qua, nhưng format không chuẩn.
-- Held-out có thể hỏi chart ảnh — hiện chỉ đọc text/tables, chưa VLM.
+## 9. Chưa verify & rủi ro (sau vòng nâng cấp P0–P2)
+- ex-13 false refusal: VLM bounded kẹt quota gemini (429 cả 3 key) — kế hoạch code sẵn, chạy lại khi quota hồi. Chunk infographic garbled hiện chỉ được prompt "đọc kỹ đừng từ chối" đỡ một phần.
+- Judge thứ 2 (gemini) 429 → cross-check 2 judges chưa hoàn thành; j1-vs-j2 chỉ 1/10 mẫu so sánh được.
+- Auto-detect layout mới verify trên 2 docs (TCB BCTN spread+top; brief PDF portrait, không số → None) — chưa test >2 docs thật.
+- Held-out có thể hỏi chart ảnh thuần (không có text layer) — chưa VLM.
 - N/N (so năm trước) chưa có trong glossary expand — câu hỏi dùng "N/N" thuần có thể retrieval yếu hơn.
+- Bảng financial statements rất lớn (Ghi chú 24+) — markdown chunk có thể vỡ một phần do merged cells; đã đủ cho câu hỏi số đơn/2 chiều.

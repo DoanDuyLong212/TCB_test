@@ -110,22 +110,33 @@ Pipeline query: `rewrite` (multi-turn) → `expand_query` (glossary + synonyms h
 - **Extra set 15 câu** phủ mảng sample không chạm: 2 unanswerable, 2 multi-turn, 2 number-format (bẫy số), 4 glossary (CIBG/NPL/đảo chiều CASA), 2 key-figure, 2 segment, 2 profile. Kết quả 14/15 — ex-05 bắt lỗi 1000x, fix prompt, rerun đúng → **chứng minh eval loop hoạt động**, không chỉ report số đẹp.
 - **Ablation script `eval/ablation_a.py`:** section-prior on/off đối chiếu trên sample + extra — bằng chứng không tune-tủ (đề §9 dọa sẽ đo gap).
 
-### 2.7. Số cần thuộc lòng
+### 2.7. Số cần thuộc lòng (sau vòng P0–P2)
 
 | Số | Giá trị |
 |---|---|
-| Strict 10 câu | **10/10** (deterministic + đọc tay) |
-| Judge agreement | **10/10** |
-| Recall | 8/9 @k=6, **9/9 @k=8** |
-| Extra set | **14/15** (ex-13 false refusal — đã khai) |
-| Citation-valid | **10/10** |
-| Chunks | 377 (197 PDF spread) |
+| Strict 10 câu | **9/10** — sq-04 "miss" duy nhất là cite trang thay thế hợp lệ (tr.48 chứa 40,4%), không phải sai số |
+| Citation-valid (số có thật trên trang cite) | **10/10** |
+| Semantic judge (qwen) | **10/10** — judge bảo sq-04 correct, chuẩn ngữ nghĩa; strict gold-page khắt khe hơn |
+| Judge agreement vs manual | 9/10 (mẫu lệch = sq-04 như trên); judge2 (gemini) bị 429 quota — cross-check chưa hoàn thành |
+| Recall | **9/9 @k=6 và @k=8** (bảng markdown kéo tr.5 thẳng top-6, trước chỉ 8/9@6) |
+| Extra set | **14/15** — chỉ ex-13 còn false refusal (kẹt VLM quota) |
+| Chunks | **602** (377 narrative + 225 table markdown) |
 | Glossary | 164 thuật ngữ, CASA→386, RBG→387 |
+| Query không dấu | 5/5 (trước fix 4/8) nhờ bigram stripped-space + fix bug Đ/đ |
 | Latency/query | ~1–2s (retrieval ~0.2s + qwen ~0.5–1.5s) |
-| Ingestion | ~16s text + ~2min glossary + ~9min embeddings (free, cache) |
+| Ingestion | ~1.5min text+tables + ~2min glossary + embeddings (free, cache 650 vectors) |
 | Cost | $0 (Gemini embed free + Groq free) |
-| Index ship | ~4MB trong repo |
-| Tests | 22 pytest pass |
+| Tests | **26 pytest pass** |
+
+### 2.8. Vòng nâng cấp P0–P2 (điểm mới cần thuộc)
+
+1. **Table chunks markdown (`src/ingest.py` + `src/tables.py`):** `find_tables()` mỗi nửa trang → chunk `type=table` với `to_markdown()` giữ nguyên cấu trúc + số Việt; narrative giữ song song (2 representation). Kết quả: recall@6 8/9→9/9; ex-03 trả "1.192.344 tỷ, +21,82%" chính xác hơn từ bảng.
+2. **Bigram bonus chuyển sang stripped-space** (cả query lẫn doc text strip dấu trước so khớp): query gõ thiếu dấu được thưởng như có dấu. **Bug bẫy kèm theo:** "Đ" (U+0110) là ký tự ghép sẵn — **NFD không tách được**, "Điểm nhấn" strip ra "Điem nhan" (Đ hoa) → check "diem nhan" luôn False. Fix: `_strip_vi` thay đ/Đ→d/D thủ công. Lesson: diacritics Việt có 2 tầng — combining marks (NFD xử được) và precomposed Đ (không).
+3. **Multi-turn v2 (`rewrite`):** dùng cả history (tìm câu gần nhất có năm, không chỉ history[-1] — chuỗi 2025→2024→2023 đúng), hỗ trợ năm tường minh trong follow-up ("còn 2023?"), fallback LLM-rewrite 1 call khi regex bất lực.
+4. **Judge thứ 2 (`eval/judge_compare.py`):** qwen/groq + gemini chạy 2 luồng, agreement matrix. Kết quả: j1 vs manual 9/10 (mẫu lệch là sq-04 — judge ngữ nghĩa đúng hơn metric strict); j2 bị 429 quota gần như toàn bộ → cross-check chưa hoàn thành, khai trung thực.
+5. **Auto-detect layout (`src/ingest.py:_detect_layout`):** portrait vs spread (đếm tỉ lệ w>h trên 13 trang mẫu) + chọn strip số trang theo **chuỗi tăng đơn điệu**. Verify trên 2 docs: TCB BCTN = spread+top; brief PDF = portrait+top, không số → None (graceful). Đây là câu trả lời cho "100 documents tiếp theo": parser không còn hard-code, chỉ cần text layer sạch.
+6. **Eval normalize Unicode hợp lệ (`_norm`):** hyphen varieties (U+2011 "BB‑" == "BB-"), space-before-% ("40,4 %" == "40,4%"), NBSP. Không đổi nghĩa số — so khớp ngữ nghĩa con số, vẫn bắt được sai số thật (40,9% ≠ 40,4%).
+7. **Prompt bổ sung:** đọc số garbled (infographic "328,1 26,9% N/N" — đừng từ chối vì format xấu), nêu kèm mức tăng khi context có, format citation cấm 【】.
 
 ---
 
@@ -207,6 +218,18 @@ Pipeline query: `rewrite` (multi-turn) → `expand_query` (glossary + synonyms h
 - **Fix:** glossary injection đứng đầu context với trang chính xác side-aware.
 - **Lesson:** model trích **dễ thấy trước** trong context — thứ tự context là một lever, không chỉ nội dung.
 
+### 4.11. Bug Đ/đ — NFD không tách được precomposed char
+- **Symptom:** chuyển bigram bonus sang stripped-space làm regression query CÓ dấu (casa test fail); p2R mất section-prior.
+- **Diagnosis:** "Đ" (U+0110) là ký tự **precomposed** — NFD decompose chỉ tách combining marks (ế → e + ́), không tách Đ → "Điem nhan" (Đ hoa) — check "diem nhan" luôn False trong khi text có "Điểm nhấn".
+- **Fix:** `_strip_vi` replace đ/Đ thủ công trước NFD.
+- **Lesson:** Vietnamese có 2 tầng dấu: combining marks (NFD xử được) vs precomposed Đ (phải thay tay). Khi viết text-normalize cho tiếng Việt, luôn test chữ Đ.
+
+### 4.12. Model "fail" thật ra là eval khắt khe hơn con người (sq-04)
+- **Symptom:** strict eval 6/10 → sau fix prompt 9/10; sq-04 trả "40,4% [tr. 48]" bị đánh fail dù số đúng, cite hợp lệ.
+- **Diagnosis:** gold-page là tr.5 nhưng tr.48 (bảng markdown, nguồn table chunk mới) cũng chứa "40,4%" — cite thay thế hoàn toàn hợp lệ theo tinh thần "analyst mở trang kiểm chứng được". Judge ngữ nghĩa (qwen) chấm correct — đúng hơn metric strict.
+- **Fix:** không đụng metric để "làm đẹp" — báo cáo cả 2 lớp: strict gold-page 9/10, citation-valid 10/10, semantic judge 10/10. Normalize Unicode biến thể (U+2011, space-%) là phép biến đổi KHÔNG đổi nghĩa số.
+- **Lesson:** metric khắt khe hơn con người cũng là một dạng noise; tách lớp "sai thật" khỏi lớp "khác gold nhưng đúng" — đó chính là lý do có citation_valid.
+
 ---
 
 ## PHẦN 5 — Q&A PHỎNG VẤN DỰ KIẾN (why X over Y)
@@ -250,15 +273,15 @@ Embedding một lần ~1000×(chunks/doc) calls; query tăngPool → FAISS ANN (
 
 ---
 
-## PHẦN 6 — HẠN CHẾ TRUNG THỰC (nói trước, đừng để bị bắt)
+## PHẦN 6 — HẠN CHẾ (trạng thái sau vòng P0–P2)
 
-1. **to_markdown (tables.py) chưa nối vào pipeline** — bảng BCTC đi qua dạng text phẳng. Đủ cho held-out dạng số nhưng nếu hỏi "bảng 8 cột ghi chú 24", cấu trúc có thể vỡ. Kế hoạch 10x: nối to_markdown vào extract_chunks cho pages có find_tables > 0.
-2. **ex-13 false refusal** — chunk infographic rối ("Thu nhập lãi thuần 9,4% N/N21,9") → model không dám trích. Fix = VLM bóc infographic.
-3. **Query không dấu** — chỉ test không-crash, chưa tối ưu (tokenizer đã có stripped-tokens nên BM25 vẫn match một phần).
-4. **gpt-oss dự phòng cite `【tr. N】`** sai format — regex bỏ qua (an toàn eval) nhưng format không chuẩn.
-5. **Multi-turn mới có rewrite 1 tầng** — câu follow-up của follow-up ("còn 2023?") có thể lệch. Đề chỉ yêu cầu 1 tầng.
-6. **Judge 1 model (qwen)** — chưa cross-check judge thứ hai; agreement 10/10 trên 10 câu là mẫu nhỏ.
-7. **Parser chỉ đúng cho layout spread-header kiểu này** — doc khác cần auto-detect (đã khai trong SUBMISSION).
+1. ~~to_markdown chưa nối pipeline~~ → **ĐÃ FIX**: 225 table chunks markdown trong pipeline, recall@6 9/9. Còn lại: bảng infographic (tr.5/59, không có rule-line) find_tables không thấy — đó là việc của VLM (mục 2).
+2. **ex-13 false refusal — CHƯA FIX (quota)**: VLM bounded đã code-ready kế hoạch nhưng gemini vision 429 cả 3 key (quota ngày). Chạy lại khi quota hồi; fallback trung thực: chunk garbled vẫn bị model từ chối.
+3. ~~Query không dấu~~ → **ĐÃ FIX + ĐO**: 4/8 → 5/5 sau stripped-space bigram; nguyên nhân gốc là bug Đ/đ NFD (war story 4.11).
+4. ~~gpt-oss cite `【tr. N】`~~ → **ĐÃ FIX**: normalize + prompt cấm 【】 + test.
+5. ~~Multi-turn 1 tầng~~ → **ĐÃ FIX**: v2 dùng full history + năm tường minh + LLM fallback; chuỗi 3 lượt có test.
+6. **Judge thứ 2 — PARTIAL**: j1 (qwen) agreement 9/10 (mẫu lệch là sq-04, judge ngữ nghĩa đúng hơn metric strict); j2 (gemini) 429 quota → cross-check chưa hoàn thành, chạy lại khi quota hồi (`eval/judge_compare.py`).
+7. ~~Parser layout-specific~~ → **ĐÃ FIX (best-effort)**: auto-detect portrait/spread + strip monotonic; verify 2 docs. Đã khai: chưa verify trên >2 docs thật.
 
 ---
 

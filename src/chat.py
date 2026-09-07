@@ -10,13 +10,19 @@ from src.retrieve import search
 SYSTEM_VI = """Bạn là trợ lý quan hệ nhà đầu tư, trả lời TIẾNG VIỆT.
 Quy tắc bắt buộc:
 1. Chỉ trả lời từ CONTEXT dưới đây. Mọi số liệu và sự kiện phải kèm citation [tr. N] với N là số trang in được cho trong context. Nhiều trang: [tr. N, M].
-2. Giữ nguyên định dạng số Việt Nam: 53,4 (phẩy thập phân), 1.192 (chấm phân nghìn), đơn vị nghìn tỷ đồng, %, tên viết tắt. TRÍCH NGUYÊN VĂN con số + đơn vị từ context, KHÔNG bao giờ diễn giải lại số thành chữ.
-3. Nếu CONTEXT chứa số liệu/sự kiện trả lời được câu hỏi thì BẮT BUỘC trả lời kèm citation, tuyệt đối không từ chối. Chỉ từ chối khi đã đọc kỹ toàn bộ CONTEXT mà vẫn không có thông tin, trả lời đúng câu: "Không có trong báo cáo. Báo cáo thường niên 2025 không đề cập nội dung này nên tôi không suy đoán." và không bịa citation.
-4. Câu follow-up ("còn năm trước thì sao?") đã được hệ thống gắn ngữ cảnh, hãy trả lời trực tiếp.
-5. Ngắn gọn, đủ để analyst paste vào email.
+2. Giữ nguyên định dạng số Việt Nam: 53,4 (phẩy thập phân), 1.192 (chấm phân nghìn), đơn vị nghìn tỷ đồng, %, tên viết tắt. TRÍCH NGUYÊN VĂN con số + đơn vị từ context, KHÔNG bao giờ diễn giải lại số thành chữ. Nếu context nêu cả mức tăng/giảm so với năm trước thì nhắc kèm.
+3. Con số trong CONTEXT có thể dính liền nhãn đơn vị hoặc rối do layout (ví dụ "328,1 26,9% N/N" hay "Nghìntỷ đồng"). Đọc kỹ; nếu cặp chỉ tiêu+số tương ứng câu hỏi thì trích chính xác — KHÔNG từ chối chỉ vì định dạng xấu.
+4. Nếu CONTEXT chứa số liệu/sự kiện trả lời được câu hỏi thì BẮT BUỘC trả lời kèm citation, tuyệt đối không từ chối. Chỉ từ chối khi đã đọc kỹ toàn bộ CONTEXT mà vẫn không có thông tin, trả lời đúng câu: "Không có trong báo cáo. Báo cáo thường niên 2025 không đề cập nội dung này nên tôi không suy đoán." và không bịa citation.
+5. Câu follow-up ("còn năm trước thì sao?") đã được hệ thống gắn ngữ cảnh, hãy trả lời trực tiếp.
+6. Ngắn gọn, đủ để analyst paste vào email. Citation đúng format [tr. N] hoặc [tr. N, M] — không dùng 【】.
 """
 
 REFUSAL = "Không có trong báo cáo."
+
+
+def normalize_citations(text: str) -> str:
+    """gpt-oss dự phòng hay cite `【tr. N】` (fullwidth brackets) — đưa về [tr. N]."""
+    return text.replace("【tr.", "[tr.").replace("【", "[").replace("】", "]")
 
 
 def build_prompt(question: str, contexts: list[dict]) -> str:
@@ -85,6 +91,7 @@ def answer(question: str, history: list[str] | None = None, k: int = 8) -> dict:
         # Lỗi kỹ thuật KHÔNG được viết dưới dạng refusal để tránh
         # làm bẩn eval (refusal giả). Đánh dấu error rõ ràng.
         text, usage = f"LỖI KỸ THUẬT gọi model: {str(e)[:150]}", {"error": True}
+    text = normalize_citations(text)
     return {"question": question, "answer": text,
             "citations": extract_citations(text),
             "retrieved_pages": [h.get("printed_page") for h in hits], **usage}

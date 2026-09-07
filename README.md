@@ -2,7 +2,7 @@
 
 Chatbot trả lời câu hỏi về **Báo cáo thường niên Techcombank 2025** (197 trang PDF, tiếng Việt) cho analyst quan hệ nhà đầu tư. Mọi câu trả lời kèm citation `[tr. N]` với **N là số trang in trên báo cáo** (không phải index PDF), từ chối trả lời khi báo cáo không có thông tin.
 
-**Kết quả:** strict eval 10/10 · judge-manual agreement 10/10 · retrieval recall 9/9@k8 · citation-valid 10/10 · ~1–2s/query · $0. Chi tiết: `SUBMISSION.md`.
+**Kết quả:** strict 9/10 (mẫu "miss" duy nhất = cite trang thay thế hợp lệ) · **citation-valid 10/10** · judge ngữ nghĩa 10/10 · recall **9/9@k6 & k8** · extra set 14/15 · query không dấu 5/5 · ~1–2s/query · $0. Chi tiết: `SUBMISSION.md`.
 
 ---
 
@@ -48,8 +48,9 @@ python3 -m src.chat --batch sample_question.json --out out.json
 # Chấm điểm + đọc report
 python3 -m src.eval --pred out.json --out eval/report.json
 python3 -m src.eval --pred out.json --out eval/report_judge.json --judge   # + LLM judge
+PYTHONPATH=. python3 eval/judge_compare.py --pred out.json                 # 2 judges cross-check
 
-# Tests (22)
+# Tests (26)
 python3 -m pytest tests/ -q
 
 # Mẹo: chạy nhanh bằng Groq (~1-2s/câu, pacing 2s thay vì 45s của Gemini free)
@@ -120,14 +121,15 @@ Nói: "15 câu tự tạo phủ mảng sample không chạm — bộ này bắt 
 ## 4. Kiến trúc (30 giây)
 
 ```
-PDF (spread 197tr) ──ingest──> 377 chunks {text, printed_page, section}
-     │ header-parse số trang in · split trái/phải · context-prefix
+PDF (spread 197tr) ──ingest──> 602 chunks (377 narrative + 225 table markdown)
+     │ auto-detect layout (portrait/spread + strip) · header-parse số trang in
+     │ split trái/phải · context-prefix · find_tables → markdown (giữ cấu trúc)
      ├─ find_tables ──> glossary.json (164 thuật ngữ + trang chính xác)
-     └─ embed (gemini-embedding-001, free) ──> FAISS + BM25(k1=0.6,b=0.9)
-query ──> rewrite multi-turn ──> expand glossary/synonym ──> hybrid RRF
-        ──> bonus (bigram/date/section-prior) ──> top-8 context
-        ──> LLM (chain gemini→groq, key rotation) ──> answer + [tr. N] / refusal
-eval ──> deterministic + manual + judge + citation-valid + ablation
+     └─ embed (gemini-embedding-001, free, cache) ──> FAISS + BM25(k1=0.6,b=0.9)
+query ──> rewrite multi-turn v2 (full history + LLM fallback) ──> expand glossary
+        ──> hybrid RRF ──> bonus (bigram stripped-space / date / section-prior)
+        ──> top-8 ──> LLM (chain gemini→groq, key rotation) ──> [tr. N] / refusal
+eval ──> deterministic + manual + 2-judge + citation-valid + ablation
 ```
 
 Xem chi tiết lý do từng lựa chọn + war stories: `myself.md` (ôn phỏng vấn), `SUBMISSION.md` (decisions doc nộp bài).

@@ -1,0 +1,73 @@
+{
+ "judges": {
+  "j1": "qwen/groq",
+  "j2": "gemini"
+ },
+ "rows": [
+  {
+   "id": "sq-01",
+   "manual": true,
+   "j1": "correct",
+   "j2": "error"
+  },
+  {
+   "id": "sq-02",
+   "manual": true,
+   "j1": "correct",
+   "j2": "error"
+  },
+  {
+   "id": "sq-03",
+   "manual": true,
+   "j1": "correct",
+   "j2": "error"
+  },
+  {
+   "id": "sq-04",
+   "manual": false,
+   "j1": "correct",
+   "j2": "correct"
+  },
+  {
+   "id": "sq-05",
+   "manual": true,
+   "j1": "correct",
+   "j2": "error"
+  },
+  {
+   "id": "sq-06",
+   "manual": true,
+   "j1": "correct",
+   "j2": "error"
+  },
+  {
+   "id": "sq-07",
+   "manual": true,
+   "j1": "correct",
+   "j2": "error"
+  },
+  {
+   "id": "sq-08",
+   "manual": true,
+   "j1": "correct",
+   "j2": "error"
+  },
+  {
+   "id": "sq-09",
+   "manual": true,
+   "j1": "correct",
+   "j2": "error"
+  },
+  {
+   "id": "sq-10",
+   "manual": true,
+   "j1": "correct",
+   "j2": "error"
+  }
+ ],
+ "agreement": {
+  "manual_vs_j1": "9/10",
+  "manual_vs_j2": "0/10",
+  "j1_vs_j2": "1/10"
+ }
+}

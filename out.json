@@ -1,7 +1,7 @@
 [
  {
   "question": "Tính đến năm 2025, Techcombank có bao nhiêu chi nhánh và phòng giao dịch, và hiện diện tại bao nhiêu tỉnh thành?",
-  "answer": "Tính đến năm 2025, Techcombank có 302 chi nhánh và phòng giao dịch, hiện diện tại 29 trên 34 tỉnh thành trên toàn quốc [tr. 4].",
+  "answer": "Tính đến năm 2025, Techcombank có mạng lưới hoạt động rộng khắp với 302 chi nhánh và phòng giao dịch tại 29 trên 34 tỉnh thành trên toàn quốc [tr. 4].",
   "citations": [
    4
   ],
@@ -10,25 +10,22 @@
    132,
    14,
    61,
-   269,
    138,
-   98,
-   15
+   216,
+   269,
+   98
   ],
-  "provider": "gemini",
-  "model": "gemini-3.5-flash",
-  "latency_s": 1.7,
-  "finish": "STOP",
+  "provider": "groq",
+  "model": "qwen/qwen3.8-27b",
+  "latency_s": 1.63,
   "id": "sq-01"
  },
  {
   "question": "Năm 2025, Techcombank được S&P Global Ratings và Fitch Ratings xếp hạng tín nhiệm ở mức nào?",
-  "answer": "Trong năm 2025, Techcombank được các tổ chức xếp hạng tín nhiệm quốc tế xếp hạng ở các mức sau:\n\n*   **S&P Global Ratings:** Nâng xếp hạng tín nhiệm lên mức **BB** với triển vọng Ổn định [tr. 4, 43].\n*   **Fitch Ratings:** Lần đầu tiên xếp hạng tín nhiệm dài hạn ở mức **BB-** với triển vọng \"Tích cực\" [tr. 4, 43].",
+  "answer": "Năm 2025, Techcombank được **S&P Global Ratings** nâng hạng lên **BB** với triển vọng **Ổn định**, và **Fitch Ratings** lần đầu tiên xếp hạng tín nhiệm dài hạn ở mức **BB‑** với triển vọng **“Tích cực”**[tr. 43][tr. 4].",
   "citations": [
-   4,
    43,
-   4,
-   43
+   4
   ],
   "retrieved_pages": [
    387,
@@ -37,90 +34,84 @@
    35,
    243,
    232,
-   239,
-   237,
-   245
+   35,
+   387,
+   236
   ],
-  "provider": "gemini",
-  "model": "gemini-3.5-flash",
-  "latency_s": 1.74,
-  "finish": "STOP",
+  "provider": "groq",
+  "model": "openai/gpt-oss-120b",
+  "latency_s": 2.15,
   "id": "sq-02"
  },
  {
   "question": "Tổng tài sản của Techcombank tại ngày 31/12/2025 là bao nhiêu?",
-  "answer": "Tổng tài sản của Techcombank tại ngày 31/12/2025 là 1.192 nghìn tỷ đồng (tương đương 1.192.344 tỷ đồng), tăng 21,8% so với năm trước [tr. 4, 5, 14].",
+  "answer": "Tổng tài sản của Techcombank tại ngày 31/12/2025 là 1.192 nghìn tỷ đồng, tăng 21,8% so với năm trước [tr. 5].",
   "citations": [
-   4,
-   5,
-   14
+   5
   ],
   "retrieved_pages": [
-   76,
    84,
+   76,
    85,
-   4,
    77,
-   5,
    14,
-   98
+   5,
+   4,
+   377
   ],
   "provider": "groq",
   "model": "qwen/qwen3.8-27b",
-  "latency_s": 1.05,
+  "latency_s": 0.88,
   "id": "sq-03"
  },
  {
   "question": "Tỷ lệ CASA của Techcombank năm 2025 là bao nhiêu?",
-  "answer": "Tỷ lệ CASA của Techcombank năm 2025 là 40,4%, dẫn đầu ngành [tr. 4, 5, 48].",
+  "answer": "Tỷ lệ CASA của Techcombank năm 2025 đạt **40,4%** [tr. 48].",
   "citations": [
-   4,
-   5,
    48
   ],
   "retrieved_pages": [
    386,
    15,
-   4,
-   14,
    48,
    59,
    328,
-   71,
-   5
+   5,
+   4,
+   53,
+   71
   ],
   "provider": "groq",
-  "model": "qwen/qwen3.8-27b",
-  "latency_s": 1.52,
+  "model": "openai/gpt-oss-120b",
+  "latency_s": 1.33,
   "id": "sq-04"
  },
  {
   "question": "Tỷ lệ nợ xấu của Techcombank năm 2025 là bao nhiêu?",
-  "answer": "Tỷ lệ nợ xấu (NPL) của Techcombank năm 2025 là 1,13% [tr. 15, 5, 48].",
+  "answer": "Tỷ lệ nợ xấu (NPL) của Techcombank năm 2025 là 1,13%, thuộc nhóm thấp nhất toàn ngành [tr. 5, 15, 48].",
   "citations": [
-   15,
    5,
+   15,
    48
   ],
   "retrieved_pages": [
    15,
    5,
-   4,
    48,
-   77,
+   4,
    90,
-   14,
-   76
+   77,
+   98,
+   14
   ],
-  "provider": "gemini",
-  "model": "gemini-3.5-flash",
-  "latency_s": 1.33,
-  "finish": "STOP",
+  "provider": "groq",
+  "model": "qwen/qwen3.8-27b",
+  "latency_s": 1.03,
   "id": "sq-05"
  },
  {
   "question": "Tổng thu nhập hoạt động năm 2025 của Techcombank là bao nhiêu, và tốc độ tăng trưởng kép giai đoạn 2018–2025 của chỉ tiêu này là bao nhiêu?",
-  "answer": "Năm 2025, tổng thu nhập hoạt động của Techcombank đạt **53,4 nghìn tỷ đồng** (tăng trưởng 13,6% so với năm trước) [tr. 5, 48]. \n\nTốc độ tăng trưởng kép (CAGR) giai đoạn 2018–2025 của chỉ tiêu này là **16,5%** [tr. 5].",
+  "answer": "Tổng thu nhập hoạt động năm 2025 của Techcombank đạt 53,4 nghìn tỷ đồng, tăng trưởng 13,6% so với cùng kỳ năm trước [tr. 5, 48]. Tốc độ tăng trưởng kép (CAGR) của chỉ tiêu này trong giai đoạn 2018–2025 là 16,5% [tr. 5].",
   "citations": [
    5,
    48,
@@ -129,68 +120,64 @@
   "retrieved_pages": [
    5,
    59,
-   58,
-   14,
-   94,
    15,
+   14,
+   58,
+   94,
    124,
    48
   ],
-  "provider": "gemini",
-  "model": "gemini-3.5-flash",
-  "latency_s": 1.58,
-  "finish": "STOP",
+  "provider": "groq",
+  "model": "qwen/qwen3.8-27b",
+  "latency_s": 0.86,
   "id": "sq-06"
  },
  {
   "question": "Dư nợ vay của Khối Ngân hàng Bán lẻ năm 2025 là bao nhiêu và tăng bao nhiêu phần trăm so với năm trước?",
-  "answer": "Dư nợ vay của Khối Ngân hàng Bán lẻ (RBG) năm 2025 là 328,1 nghìn tỷ đồng, tăng 26,9% so với năm trước (N/N) [tr. 58, 59].",
+  "answer": "Dư nợ vay của Khối Ngân hàng Bán lẻ năm 2025 đạt **328,1 nghìn tỷ đồng**, tăng **26,9 %** so với năm trước [N/N] [tr. 59]",
   "citations": [
-   58,
    59
   ],
   "retrieved_pages": [
-   58,
    59,
-   5,
+   58,
    15,
    14,
-   111,
+   5,
+   71,
    48,
-   214
+   111
   ],
-  "provider": "gemini",
-  "model": "gemini-3.5-flash",
-  "latency_s": 1.53,
-  "finish": "STOP",
+  "provider": "groq",
+  "model": "openai/gpt-oss-120b",
+  "latency_s": 1.84,
   "id": "sq-07"
  },
  {
   "question": "Theo danh mục thuật ngữ viết tắt của báo cáo, RBG là viết tắt của khối nào?",
-  "answer": "Theo danh mục thuật ngữ viết tắt của báo cáo, RBG là viết tắt của Khối Ngân hàng Bán lẻ [tr. 387].",
+  "answer": "Theo danh mục thuật ngữ viết tắt, RBG là viết tắt của Khối Ngân hàng Bán lẻ [tr. 387].",
   "citations": [
    387
   ],
   "retrieved_pages": [
    387,
-   2,
    386,
+   2,
+   387,
    387,
    3,
    58,
    59,
-   293,
-   162
+   159
   ],
-  "provider": "gemini",
-  "model": "gemini-3.5-flash",
-  "latency_s": 1.43,
-  "finish": "STOP",
+  "provider": "groq",
+  "model": "qwen/qwen3.8-27b",
+  "latency_s": 1.02,
   "id": "sq-08"
  },
  {
   "question": "Theo danh mục thuật ngữ viết tắt của báo cáo, CASA là viết tắt của thuật ngữ gì?",
-  "answer": "Theo danh mục thuật ngữ viết tắt của báo cáo, CASA là viết tắt của thuật ngữ \"Tiền gửi không kỳ hạn\" [tr. 386].",
+  "answer": "CASA là viết tắt của “Tiền gửi không kỳ hạn” [tr. 386]",
   "citations": [
    386
   ],
@@ -198,17 +185,16 @@
    386,
    386,
    387,
+   386,
    3,
-   2,
-   373,
-   307,
+   329,
    328,
+   347,
    346
   ],
-  "provider": "gemini",
-  "model": "gemini-3.5-flash",
-  "latency_s": 1.51,
-  "finish": "STOP",
+  "provider": "groq",
+  "model": "openai/gpt-oss-120b",
+  "latency_s": 1.24,
   "id": "sq-09"
  },
  {
@@ -217,18 +203,17 @@
   "citations": [],
   "retrieved_pages": [
    77,
-   14,
-   76,
-   48,
-   5,
    15,
+   14,
+   48,
+   76,
+   5,
    84,
    85
   ],
-  "provider": "gemini",
-  "model": "gemini-3.5-flash",
-  "latency_s": 1.45,
-  "finish": "STOP",
+  "provider": "groq",
+  "model": "qwen/qwen3.8-27b",
+  "latency_s": 1.1,
   "id": "sq-10"
  }
 ]
