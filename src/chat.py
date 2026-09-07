@@ -1,0 +1,138 @@
+"""Vietnamese IR chatbot: REPL + batch, strict [tr. N] citations, grounded refusal."""
+import argparse
+import json
+import re
+
+from src.config import get_settings
+from src.llm import chat_complete
+from src.retrieve import search
+
+SYSTEM_VI = """Bạn là trợ lý quan hệ nhà đầu tư, trả lời TIẾNG VIỆT.
+Quy tắc bắt buộc:
+1. Chỉ trả lời từ CONTEXT dưới đây. Mọi số liệu và sự kiện phải kèm citation [tr. N] với N là số trang in được cho trong context. Nhiều trang: [tr. N, M].
+2. Giữ nguyên định dạng số Việt Nam: 53,4 (phẩy thập phân), 1.192 (chấm phân nghìn), đơn vị nghìn tỷ đồng, %, tên viết tắt. TRÍCH NGUYÊN VĂN con số + đơn vị từ context, KHÔNG bao giờ diễn giải lại số thành chữ.
+3. Nếu CONTEXT chứa số liệu/sự kiện trả lời được câu hỏi thì BẮT BUỘC trả lời kèm citation, tuyệt đối không từ chối. Chỉ từ chối khi đã đọc kỹ toàn bộ CONTEXT mà vẫn không có thông tin, trả lời đúng câu: "Không có trong báo cáo. Báo cáo thường niên 2025 không đề cập nội dung này nên tôi không suy đoán." và không bịa citation.
+4. Câu follow-up ("còn năm trước thì sao?") đã được hệ thống gắn ngữ cảnh, hãy trả lời trực tiếp.
+5. Ngắn gọn, đủ để analyst paste vào email.
+"""
+
+REFUSAL = "Không có trong báo cáo."
+
+
+def build_prompt(question: str, contexts: list[dict]) -> str:
+    if not contexts:
+        return (SYSTEM_VI + f"\nCONTEXT: (trống)\nCÂU HỎI: {question}\n"
+                f"TRẢ LỜI (nếu không có thông tin, bắt đầu bằng '{REFUSAL}'):")
+    blocks = []
+    # 2600 ký tự/chunk: chunk dài (vd p2L 2930) chứa đáp án ở giữa
+    # ("302" ở pos 1543) — cắt 1500 làm model mù đáp án -> false refusal.
+    for c in contexts:
+        blocks.append(f"[tr. {c.get('printed_page')}] {c.get('text','')[:2600]}")
+    return (SYSTEM_VI + "\nCONTEXT:\n" + "\n---\n".join(blocks)
+            + f"\nCÂU HỎI: {question}\nTRẢ LỜI (tiếng Việt, kèm [tr. N] cho mọi số liệu/sự kiện; "
+            f"nếu không có, bắt đầu bằng '{REFUSAL}'):")
+
+
+def extract_citations(text: str) -> list[int]:
+    out: list[int] = []
+    for m in re.finditer(r"\[tr\.\s*([\d,\s]+)\]", text):
+        for part in m.group(1).split(","):
+            part = part.strip()
+            if part.isdigit():
+                out.append(int(part))
+    return out
+
+
+def glossary_hits(question: str) -> list[dict]:
+    """Deterministic terminology lookup: exact glossary term in question."""
+    import json
+    import pathlib
+    import re
+
+    try:
+        g = json.loads(pathlib.Path("index/glossary.json").read_text(encoding="utf-8"))
+        pages = json.loads(pathlib.Path("index/glossary_pages.json").read_text(encoding="utf-8"))
+    except Exception:
+        return []
+    out = []
+    up = question.upper()
+    for term, defi in g.items():
+        if len(term) < 2 or len(term) > 12:
+            continue
+        if re.search(rf"(?<![A-Z0-9À-Ỹ]){re.escape(term)}(?![A-Z0-9À-Ỹ])", up):
+            pg = (pages.get(term) or [None])[0]
+            out.append({"text": f"{term}: {defi} (Danh mục thuật ngữ viết tắt)",
+                        "printed_page": pg, "id": f"g:{term}"})
+    return out[:2]
+
+
+def answer(question: str, history: list[str] | None = None, k: int = 8) -> dict:
+    history = history or []
+    hits = search(question, k=k, history=history)
+    ghits = glossary_hits(question)
+    if ghits:
+        # Thuật ngữ: định nghĩa glossary luôn đứng đầu context để model
+        # cite đúng trang 386/387 thay vì trang mục lục nhắc tới số trang.
+        gids = {g["id"] for g in ghits}
+        hits = ghits + [h for h in hits if h.get("id") not in gids]
+    prompt = build_prompt(question, hits)
+    try:
+        text, usage = chat_complete([
+            {"role": "system", "content": SYSTEM_VI},
+            {"role": "user", "content": prompt},
+        ])
+    except Exception as e:
+        # Lỗi kỹ thuật KHÔNG được viết dưới dạng refusal để tránh
+        # làm bẩn eval (refusal giả). Đánh dấu error rõ ràng.
+        text, usage = f"LỖI KỸ THUẬT gọi model: {str(e)[:150]}", {"error": True}
+    return {"question": question, "answer": text,
+            "citations": extract_citations(text),
+            "retrieved_pages": [h.get("printed_page") for h in hits], **usage}
+
+
+def main() -> None:
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--batch", default=None, help="JSON list of {id,question}")
+    ap.add_argument("--out", default="out.json")
+    ap.add_argument("--k", type=int, default=8)
+    args = ap.parse_args()
+    if args.batch:
+        items = json.load(open(args.batch, encoding="utf-8"))
+        history: list[str] = []
+        results = []
+        for n, it in enumerate(items):
+            q = it.get("question", "")
+            r = answer(q, history=history, k=args.k)
+            r["id"] = it.get("id")
+            results.append(r)
+            history.append(q)
+            if n < len(items) - 1:
+                import time as _time
+
+                # Gemini free-tier RPM rất tight; Groq/OpenRouter thoải mái.
+                if "gemini" in (get_settings()["provider"].split(",")[0]):
+                    _time.sleep(45)
+                else:
+                    _time.sleep(2)
+        json.dump(results, open(args.out, "w", encoding="utf-8"),
+                  ensure_ascii=False, indent=1)
+        print(f"wrote {len(results)} answers -> {args.out}")
+        return
+    print("Chatbot IR (tiếng Việt). Gõ 'exit' để thoát.")
+    history = []
+    while True:
+        try:
+            q = input("Bạn> ").strip()
+        except (EOFError, KeyboardInterrupt):
+            break
+        if q.lower() in ("exit", "quit"):
+            break
+        if not q:
+            continue
+        r = answer(q, history=history)
+        print(f"Bot> {r['answer']}\n")
+        history.append(q)
+
+
+if __name__ == "__main__":
+    main()

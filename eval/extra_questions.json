@@ -1,0 +1,17 @@
+[
+  {"id": "ex-01", "category": "unanswerable", "question": "Techcombank đặt mục tiêu lợi nhuận trước thuế năm 2028 là bao nhiêu?", "answerable": false},
+  {"id": "ex-02", "category": "unanswerable", "question": "Ai là cổ đông lớn nhất của Techcombank với tỷ lệ sở hữu bao nhiêu phần trăm?", "answerable": false, "note": "verify manually; refuse if absent"},
+  {"id": "ex-03", "category": "multiturn", "question": "Tổng tài sản năm 2025 là bao nhiêu?", "answerable": true, "followed_by": "còn năm trước thì sao?"},
+  {"id": "ex-04", "category": "multiturn", "question": "Tỷ lệ CASA năm 2025 là bao nhiêu?", "answerable": true, "followed_by": "còn tỷ lệ nợ xấu thì sao?"},
+  {"id": "ex-05", "category": "number_format", "question": "Con số 1.192 nghìn tỷ đồng trong báo cáo là một nghìn một trăm chín mươi hai tỷ hay một phẩy một chín hai tỷ?", "answerable": true, "expect": "nghìn tỷ, chấm phân nghìn"},
+  {"id": "ex-06", "category": "number_format", "question": "53,4 nghìn tỷ đồng nghĩa là bao nhiêu? Dấu phẩy ở đây là thập phân hay phân nghìn?", "answerable": true, "expect": "thập phân"},
+  {"id": "ex-07", "category": "glossary", "question": "CIBG là viết tắt của khối nào?", "answerable": true},
+  {"id": "ex-08", "category": "glossary", "question": "NPL là gì theo danh mục thuật ngữ?", "answerable": true},
+  {"id": "ex-09", "category": "glossary", "question": "Tiền gửi không kỳ hạn được viết tắt là gì?", "answerable": true, "expect": "CASA"},
+  {"id": "ex-10", "category": "key_figures", "question": "Lợi nhuận trước thuế năm 2025 của Techcombank là bao nhiêu?", "answerable": true},
+  {"id": "ex-11", "category": "key_figures", "question": "Tốc độ tăng trưởng tín dụng hợp nhất năm 2025 là bao nhiêu?", "answerable": true, "note": "verify manually"},
+  {"id": "ex-12", "category": "segment", "question": "Số dư tiền gửi của Khối Ngân hàng Bán lẻ năm 2025 là bao nhiêu?", "answerable": true, "note": "verify manually, near sq-07"},
+  {"id": "ex-13", "category": "segment", "question": "Thu nhập lãi thuần của Khối Ngân hàng Bán lẻ năm 2025 là bao nhiêu?", "answerable": true, "note": "verify manually"},
+  {"id": "ex-14", "category": "profile", "question": "Techcombank phục vụ bao nhiêu khách hàng tính đến năm 2025?", "answerable": true, "expect": "18 triệu"},
+  {"id": "ex-15", "category": "profile", "question": "Triển vọng xếp hạng của Fitch Ratings dành cho Techcombank là gì?", "answerable": true, "expect": "Tích cực"}
+]

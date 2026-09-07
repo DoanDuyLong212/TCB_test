@@ -1,0 +1,317 @@
+[
+ {
+  "question": "Techcombank đặt mục tiêu lợi nhuận trước thuế năm 2028 là bao nhiêu?",
+  "answer": "Không có trong báo cáo. Báo cáo thường niên 2025 không đề cập nội dung này nên tôi không suy đoán.",
+  "citations": [],
+  "retrieved_pages": [
+   77,
+   48,
+   76,
+   15,
+   14,
+   5,
+   84,
+   85
+  ],
+  "provider": "groq",
+  "model": "qwen/qwen3.8-27b",
+  "latency_s": 1.06,
+  "id": "ex-01"
+ },
+ {
+  "question": "Ai là cổ đông lớn nhất của Techcombank với tỷ lệ sở hữu bao nhiêu phần trăm?",
+  "answer": "Không có trong báo cáo. Báo cáo thường niên 2025 không đề cập nội dung này nên tôi không suy đoán.",
+  "citations": [],
+  "retrieved_pages": [
+   386,
+   110,
+   76,
+   4,
+   5,
+   138,
+   239,
+   111,
+   98
+  ],
+  "provider": "groq",
+  "model": "qwen/qwen3.8-27b",
+  "latency_s": 0.93,
+  "id": "ex-02"
+ },
+ {
+  "question": "Tổng tài sản năm 2025 là bao nhiêu?",
+  "answer": "Tổng tài sản năm 2025 của Techcombank đạt **1.192 nghìn tỷ đồng**【tr. 5, 14】.",
+  "citations": [],
+  "retrieved_pages": [
+   98,
+   14,
+   77,
+   5,
+   4,
+   76,
+   84,
+   85
+  ],
+  "provider": "groq",
+  "model": "openai/gpt-oss-120b",
+  "latency_s": 1.63,
+  "id": "ex-03"
+ },
+ {
+  "question": "Tỷ lệ CASA năm 2025 là bao nhiêu?",
+  "answer": "Tỷ lệ CASA năm 2025 của Techcombank là 40,4%, dẫn đầu ngành [tr. 5, 48].",
+  "citations": [
+   5,
+   48
+  ],
+  "retrieved_pages": [
+   386,
+   15,
+   14,
+   5,
+   4,
+   48,
+   328,
+   77,
+   59
+  ],
+  "provider": "groq",
+  "model": "qwen/qwen3.8-27b",
+  "latency_s": 1.02,
+  "id": "ex-04"
+ },
+ {
+  "question": "Con số 1.192 nghìn tỷ đồng trong báo cáo là một nghìn một trăm chín mươi hai tỷ hay một phẩy một chín hai tỷ?",
+  "answer": "Con số 1.192 nghìn tỷ đồng trong báo cáo là **một nghìn một trăm chín mươi hai nghìn tỷ đồng** (tương đương 1.192.000 tỷ đồng).\n\nTheo báo cáo, Tổng tài sản của Techcombank tại 31/12/2025 đạt **1.192 nghìn tỷ đồng**, tăng 21,8% so với năm trước [tr. 4, 5].",
+  "citations": [
+   4,
+   5
+  ],
+  "retrieved_pages": [
+   26,
+   55,
+   4,
+   35,
+   303,
+   50,
+   5,
+   34
+  ],
+  "provider": "groq",
+  "model": "qwen/qwen3.8-27b",
+  "latency_s": 1.31,
+  "id": "ex-05"
+ },
+ {
+  "question": "53,4 nghìn tỷ đồng nghĩa là bao nhiêu? Dấu phẩy ở đây là thập phân hay phân nghìn?",
+  "answer": "53,4 nghìn tỷ đồng là Tổng thu nhập hoạt động (TOI) của Techcombank trong năm 2025 [tr. 5, 14, 48].\n\nDấu phẩy trong con số này là dấu thập phân (theo quy ước viết số của Việt Nam), không phải dấu phân nghìn.",
+  "citations": [
+   5,
+   14,
+   48
+  ],
+  "retrieved_pages": [
+   5,
+   48,
+   110,
+   111,
+   239,
+   4,
+   14,
+   238
+  ],
+  "provider": "groq",
+  "model": "qwen/qwen3.8-27b",
+  "latency_s": 1.13,
+  "id": "ex-06"
+ },
+ {
+  "question": "CIBG là viết tắt của khối nào?",
+  "answer": "CIBG là viết tắt của **Khối Ngân hàng doanh nghiệp và Định chế tài chính**【tr. 386】.",
+  "citations": [],
+  "retrieved_pages": [
+   386,
+   69,
+   68,
+   2,
+   null,
+   293,
+   191,
+   386,
+   189
+  ],
+  "provider": "groq",
+  "model": "openai/gpt-oss-120b",
+  "latency_s": 1.5,
+  "id": "ex-07"
+ },
+ {
+  "question": "NPL là gì theo danh mục thuật ngữ?",
+  "answer": "Theo danh mục thuật ngữ viết tắt, NPL là Nợ xấu [tr. 387].",
+  "citations": [
+   387
+  ],
+  "retrieved_pages": [
+   387,
+   387,
+   15,
+   55,
+   54,
+   386,
+   5,
+   4,
+   48
+  ],
+  "provider": "groq",
+  "model": "qwen/qwen3.8-27b",
+  "latency_s": 1.14,
+  "id": "ex-08"
+ },
+ {
+  "question": "Tiền gửi không kỳ hạn được viết tắt là gì?",
+  "answer": "Tiền gửi không kỳ hạn được viết tắt là **CASA**【tr. 386】.",
+  "citations": [],
+  "retrieved_pages": [
+   386,
+   307,
+   373,
+   328,
+   378,
+   344,
+   330,
+   303
+  ],
+  "provider": "groq",
+  "model": "openai/gpt-oss-120b",
+  "latency_s": 1.12,
+  "id": "ex-09"
+ },
+ {
+  "question": "Lợi nhuận trước thuế năm 2025 của Techcombank là bao nhiêu?",
+  "answer": "Lợi nhuận trước thuế năm 2025 của Techcombank đạt 32.538 tỷ đồng (tương đương 32,5 nghìn tỷ đồng), tăng 18,2% so với cùng kỳ năm trước [tr. 14, 15, 48].",
+  "citations": [
+   14,
+   15,
+   48
+  ],
+  "retrieved_pages": [
+   77,
+   76,
+   14,
+   15,
+   48,
+   5,
+   84,
+   85
+  ],
+  "provider": "groq",
+  "model": "qwen/qwen3.8-27b",
+  "latency_s": 1.13,
+  "id": "ex-10"
+ },
+ {
+  "question": "Tốc độ tăng trưởng tín dụng hợp nhất năm 2025 là bao nhiêu?",
+  "answer": "Tốc độ tăng trưởng tín dụng hợp nhất năm 2025 là **20,7 %** so với năm 2024 [N/N] [tr. 54].",
+  "citations": [
+   54
+  ],
+  "retrieved_pages": [
+   71,
+   111,
+   118,
+   214,
+   215,
+   239,
+   54,
+   14
+  ],
+  "provider": "groq",
+  "model": "openai/gpt-oss-120b",
+  "latency_s": 1.33,
+  "id": "ex-11"
+ },
+ {
+  "question": "Số dư tiền gửi của Khối Ngân hàng Bán lẻ năm 2025 là bao nhiêu?",
+  "answer": "Số dư tiền gửi của Khối Ngân hàng Bán lẻ năm 2025 là 475,8 nghìn tỷ đồng [tr. 58, 59].",
+  "citations": [
+   58,
+   59
+  ],
+  "retrieved_pages": [
+   58,
+   59,
+   15,
+   14,
+   111,
+   71,
+   53,
+   121
+  ],
+  "provider": "groq",
+  "model": "qwen/qwen3.8-27b",
+  "latency_s": 1.03,
+  "id": "ex-12"
+ },
+ {
+  "question": "Thu nhập lãi thuần của Khối Ngân hàng Bán lẻ năm 2025 là bao nhiêu?",
+  "answer": "Không có trong báo cáo. Báo cáo thường niên 2025 không đề cập nội dung này nên tôi không suy đoán.",
+  "citations": [],
+  "retrieved_pages": [
+   58,
+   59,
+   15,
+   48,
+   111,
+   14,
+   300,
+   77
+  ],
+  "provider": "groq",
+  "model": "openai/gpt-oss-120b",
+  "latency_s": 1.61,
+  "id": "ex-13"
+ },
+ {
+  "question": "Techcombank phục vụ bao nhiêu khách hàng tính đến năm 2025?",
+  "answer": "Tính đến năm 2025, Techcombank phục vụ hơn 18 triệu khách hàng cá nhân và doanh nghiệp [tr. 4].",
+  "citations": [
+   4
+  ],
+  "retrieved_pages": [
+   98,
+   132,
+   71,
+   58,
+   118,
+   4,
+   119,
+   125
+  ],
+  "provider": "groq",
+  "model": "qwen/qwen3.8-27b",
+  "latency_s": 1.04,
+  "id": "ex-14"
+ },
+ {
+  "question": "Triển vọng xếp hạng của Fitch Ratings dành cho Techcombank là gì?",
+  "answer": "Fitch Ratings đã xếp hạng tín nhiệm dài hạn của Techcombank ở mức BB‑- với triển vọng “Tích cực” [tr. 43, 4].",
+  "citations": [
+   43,
+   4
+  ],
+  "retrieved_pages": [
+   43,
+   4,
+   243,
+   16,
+   219,
+   35,
+   22,
+   220
+  ],
+  "provider": "groq",
+  "model": "openai/gpt-oss-120b",
+  "latency_s": 1.33,
+  "id": "ex-15"
+ }
+]
