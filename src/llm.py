@@ -129,7 +129,7 @@ def _try_groq(messages: list[dict], max_tokens: int, temperature: float,
 
 def _try_gemini(messages: list[dict], max_tokens: int, temperature: float,
                 stats: dict | None = None) -> tuple[str, dict]:
-    keys = _keys("GEMINI_API_KEY", "GEMINI_API_KEY_2", "GEMINI_API_KEY_3")
+    keys = _keys("GEMINI_API_KEY", "GEMINI_API_KEY_2", "GEMINI_API_KEY_3", "GEMINI_API_KEY_4")
     models = [m.strip() for m in
               os.getenv("GEN_MODELS", os.getenv("GEN_MODEL", "gemini-3.5-flash")).split(",")
               if m.strip()]

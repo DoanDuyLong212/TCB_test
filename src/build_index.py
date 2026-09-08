@@ -51,7 +51,7 @@ def _embed_gemini(texts: list[str], model: str = "gemini-embedding-001") -> np.n
     import time as _time
     import urllib.request
 
-    keys = _keys("GEMINI_API_KEY", "GEMINI_API_KEY_2")
+    keys = _keys("GEMINI_API_KEY", "GEMINI_API_KEY_2", "GEMINI_API_KEY_3", "GEMINI_API_KEY_4")
     if not keys:
         raise RuntimeError("no GEMINI keys")
     cache_path = pathlib.Path("index/embed_cache.json")
