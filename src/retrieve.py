@@ -145,7 +145,11 @@ def search(query: str, k: int = 5, history: list[str] | None = None) -> list[dic
     _load()
     assert CHUNKS is not None and _ID2CHUNK is not None
     t0 = _time.time()
-    q = expand_query(rewrite(query, history))
+    q_full = expand_query(rewrite(query, history))
+    # Nửa sau " | follow-up: ..." là chỉ dẫn cho GENERATOR — cắt khỏi
+    # retrieval scoring vì nó là noise tokens BM25 (vd "follow" không phải
+    # tiếng Việt, "còn/sao" match hàng loạt doc không liên quan).
+    q = q_full.split(" | follow-up:")[0].strip() or q_full
     t_rewrite = _time.time()
 
     scores: dict[str, float] = {}

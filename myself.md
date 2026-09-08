@@ -236,6 +236,13 @@ Pipeline query: `rewrite` (multi-turn) → `expand_query` (glossary + synonyms h
 - **Fix:** rule 8 (một chỉ tiêu → một con số, cấm liệt kê/kết luận thiếu số liệu) + rule 9 hai phần: (a) % N/N luôn thuộc năm sau so với năm trước, viết rõ chiều; (b) cách đọc bảng 2 dòng tiêu đề (cột 2024 = thực hiện năm trước, ô trống không lệch cột). Sau fix: hết đảo chiều, hết số rác, 978.799 [tr. 14] đúng — nhưng model nhỏ vẫn liệt kê 4 dòng của bảng khi câu follow-up mơ hồ ("kết quả").
 - **Lesson + giới hạn trung thực:** 3 vòng prompt hết cải thiện → dừng (mỗi vòng tốn quota). Với câu mơ hồ, liệt kê đúng-có-cite tốt hơn từ chối/ảo giác; đây là trade-off model nhỏ, model lớn hơn hoặc structured-extraction mới triệt để.
 
+### 4.14. Cite đúng số nhưng sai trang gold (sq-04: [48] thay vì [5])
+- **Symptom (user bắt):** tr.5 CÓ trong context (rank 6) mà model vẫn cite [48] — chunk tr.48 viết câu hoàn chỉnh nên model chọn nguồn dễ đọc.
+- **Diagnosis:** generation preference, không phải retrieval (gold đã trong top-8). Ép hard-code trang = overfitting; rerun để "may ra" = cherry-picking, vi phạm honesty.
+- **Fix (nguyên tắc chung):** (1) `_order_context` — glossary → chunk tóm tắt → còn lại; (2) rule 7 mở rộng: cite TẤT CẢ trang trong CONTEXT chứa đúng số liệu (`[tr. 5, 48]`), chỉ trang thực sự chứa số. Thắng mọi kiểu chấm: exact-match cần intersect, judge/human cần valid.
+- **Kết quả:** sq-04 → [48, 5, 53], strict 10/10 (verify tay), 35/35 tests, recall giữ 9/9.
+- **Lesson:** khi có nhiều đáp án đúng, thiết kế để hệ thống bao phủ thay vì ép một đáp án — robustness > may mắn.
+
 ---
 
 ## PHẦN 5 — Q&A PHỎNG VẤN DỰ KIẾN (why X over Y)
