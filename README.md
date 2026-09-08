@@ -2,7 +2,7 @@
 
 Chatbot trả lời câu hỏi về **Báo cáo thường niên Techcombank 2025** (197 trang PDF, tiếng Việt) cho analyst quan hệ nhà đầu tư. Mọi câu trả lời kèm citation `[tr. N]` với **N là số trang in trên báo cáo** (không phải index PDF); từ chối trả lời khi báo cáo không có thông tin.
 
-**Kết quả:** strict **10/10** · citation-valid 10/10 · judge ngữ nghĩa 10/10 · recall **9/9@k6 & k8** · extra set tự tạo 14/15 · query không dấu 5/5 · ~1–2s/query · $0 · 35 pytest pass. Chi tiết: `SUBMISSION.md`.
+**Kết quả:** strict **10/10** · citation-valid 10/10 · judge ngữ nghĩa 10/10 · recall **9/9@k6 & k8** · extra set tự tạo 14/15 · query không dấu 5/5 · ~1–2s/query · $0 · 36 pytest pass. Chi tiết: `SUBMISSION.md`.
 
 ## Demo video (3–5 phút, one-take, có giọng)
 
@@ -60,7 +60,7 @@ PYTHONPATH=. python3 eval/judge_compare.py --pred out.json                      
 # Recall retrieval (không tốn quota LLM) + ablation section-prior
 PYTHONPATH=. python3 eval/ablation_a.py
 
-# Tests (35)
+# Tests (36)
 python3 -m pytest tests/ -q
 ```
 
