@@ -119,6 +119,7 @@ def answer(question: str, history: list[str] | None = None, k: int = 8) -> dict:
     from src.retrieve import LAST_SEARCH_TIMINGS
 
     history = history or []
+    print("... Đang tìm trong báo cáo ...", flush=True)
     hits = search(question, k=k, history=history)
     ghits = glossary_hits(question)
     if ghits:
@@ -127,6 +128,7 @@ def answer(question: str, history: list[str] | None = None, k: int = 8) -> dict:
         gids = {g["id"] for g in ghits}
         hits = ghits + [h for h in hits if h.get("id") not in gids]
     hits = _order_context(hits)
+    print("... Đang hỏi model ...", flush=True)
     prompt = build_prompt(question, hits)
     try:
         text, usage = chat_complete([

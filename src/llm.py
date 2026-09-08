@@ -92,6 +92,10 @@ def _run_rounds(thunks: list, stats: dict | None, max_rounds: int = 3):
         wait = _backoff_base() * (rnd + 1)
         if stats is not None:
             stats["sleep_s"] = round(stats.get("sleep_s", 0.0) + wait, 1)
+        # Không bao giờ im lặng khi chờ: REPL/batch đều thấy tiến trình,
+        # quota cạn trông như "treo" nếu không in gì (bài học demo).
+        print(f"[llm] 429 hết quota, đợi {wait:g}s rồi xoay key tiếp "
+              f"(vòng {rnd + 2}/{max_rounds})...", flush=True)
         _time.sleep(wait)
     raise last_err  # type: ignore[misc]
 
