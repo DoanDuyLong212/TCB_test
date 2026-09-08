@@ -15,7 +15,7 @@ Video đi qua cả 10 câu mẫu trong REPL (kèm 1 follow-up multi-turn `còn n
 ## 1. Cài đặt (một lần)
 
 ```bash
-# 0. Yêu cầu: Python 3.10+, pip, file PDF đặt cạnh repo (đã kèm sẵn)
+# 0. Yêu cầu: Python 3.10+, pip (KHÔNG cần file PDF — grading query trực tiếp lên `index/` ship sẵn theo đúng đề; chỉ cần PDF gốc của đề nếu muốn rebuild index)
 python3 -m pip install -r requirements.txt
 
 # 1. Tạo .env từ mẫu rồi điền key (tối thiểu 1 provider còn quota)
@@ -35,7 +35,7 @@ Biến môi trường trong `.env` (đầy đủ trong `.env.example`):
 | `EMB_MODEL` | Model embedding local (nếu chạy offline) | `BAAI/bge-m3` |
 | `BACKOFF_BASE_S` | Giây sleep cơ số khi 429/503 | `30` (REPL nên để `10`) |
 
-Index đã build sẵn trong `index/` (602 chunks: 377 narrative + 225 table markdown) — **không cần rebuild, grading query trực tiếp lên index này**. Muốn rebuild: `python3 -m src.ingest` → `python3 -c "from src.glossary import build_glossary; build_glossary()"` → `python3 -m src.build_index`.
+Index đã build sẵn trong `index/` (602 chunks: 377 narrative + 225 table markdown) — **không cần rebuild, grading query trực tiếp lên index này**. Muốn rebuild (cần file PDF gốc của đề đặt cạnh repo): `python3 -m src.ingest` → `python3 -c "from src.glossary import build_glossary; build_glossary()"` → `python3 -m src.build_index`.
 
 ## 2. Chạy & chấm điểm
 

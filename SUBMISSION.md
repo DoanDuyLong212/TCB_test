@@ -62,7 +62,7 @@ python3 -m src.chat   # REPL tiếng Việt, gõ exit để thoát
 ```
 - Biến môi trường: `PROVIDER` (chuỗi, mặc định `gemini,groq`), `GEN_MODEL`/`GEN_MODELS` (Gemini chain), `GEN_MODELS_GROQ` (mặc định `qwen/qwen3.8-27b,openai/gpt-oss-120b`), `EMB_MODEL`, `GEMINI_API_KEY`, `_2`, `_3`, `GROQ_API_KEY`, `_2`, `OPENROUTER_API_KEY`. Không in key ra log (masked).
 - Index đã build sẵn trong `index/`; muốn rebuild: `python3 -m src.ingest` → `python3 -c "from src.glossary import build_glossary; build_glossary()"` → `python3 -m src.build_index`.
-- Prereq: Python 3.10+, pip, file PDF đặt cạnh repo.
+- Prereq: Python 3.10+, pip (không cần PDF gốc — grading query trực tiếp lên `index/` ship sẵn; PDF chỉ cần khi rebuild).
 
 ## 7. Video demo
 - Link (one-take 3-5 phút, có giọng, đi qua 10 câu mẫu + 1 follow-up multi-turn, latency và refusal thật):
