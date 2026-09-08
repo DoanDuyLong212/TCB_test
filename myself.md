@@ -243,6 +243,13 @@ Pipeline query: `rewrite` (multi-turn) → `expand_query` (glossary + synonyms h
 - **Kết quả:** sq-04 → [48, 5, 53], strict 10/10 (verify tay), 35/35 tests, recall giữ 9/9.
 - **Lesson:** khi có nhiều đáp án đúng, thiết kế để hệ thống bao phủ thay vì ép một đáp án — robustness > may mắn.
 
+### 4.15. Groq 429 hàng loạt — KHÔNG phải hết quota ngày
+- **Symptom:** hỏi dồn thì 429 toàn bộ 5 keys cùng lúc; chờ 10 phút chạy lại vẫn 429 ngay → tưởng sập hẳn / hết quota ngày.
+- **Đo đạc:** 1 câu full-size tốn **6489 tokens** (usage thật, cao hơn ước len//4=5415); bucket Groq **8000 tokens/key**; refill đo được **~107 tok/s** (đầy bucket trong ~75s); probe nhỏ (14 tokens) luôn OK kể cả lúc sự cố.
+- **Diagnosis:** mỗi câu ăn ~6.5k/8k bucket → 5 keys ≈ 6 câu back-to-back là cạn sạch → call sau 429 TỨC THÌ. Probe nhỏ qua được nên dễ nhầm "quota còn mà vẫn 429" — phải đo bằng full-size call mới lộ trần thật. (Không loại trừ: model nghẽn tạm thời — Groq trả 429 cả khi quá tải — hoặc key dùng chung chỗ khác.)
+- **Fix vận hành:** nhịp 25–30s/câu (khớp refill), 10 câu ≈ 5 phút; đừng retry tay dồn dập; probe 1 call nhỏ trước phiên quan trọng. Fix code dài hạn: Bước 1 giảm prompt ~4.3k→~2.8k tokens (burst tăng gấp đôi).
+- **Lesson:** đọc `remaining-tokens` + ĐO refill rate thay vì đoán daily/monthly; tiny probe ≠ full-size call khi chẩn đoán quota.
+
 ---
 
 ## PHẦN 5 — Q&A PHỎNG VẤN DỰ KIẾN (why X over Y)
