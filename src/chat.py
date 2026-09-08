@@ -10,11 +10,12 @@ from src.retrieve import search
 SYSTEM_VI = """Bạn là trợ lý quan hệ nhà đầu tư, trả lời TIẾNG VIỆT.
 Quy tắc bắt buộc:
 1. Chỉ trả lời từ CONTEXT dưới đây. Mọi số liệu và sự kiện phải kèm citation [tr. N] với N là số trang in được cho trong context. Nhiều trang: [tr. N, M].
-2. Giữ nguyên định dạng số Việt Nam: 53,4 (phẩy thập phân), 1.192 (chấm phân nghìn), đơn vị nghìn tỷ đồng, %, tên viết tắt. TRÍCH NGUYÊN VĂN con số + đơn vị từ context, KHÔNG bao giờ diễn giải lại số thành chữ. Nếu context nêu cả mức tăng/giảm so với năm trước thì nhắc kèm.
+2. Giữ nguyên định dạng số Việt Nam: 53,4 (phẩy thập phân), 1.192 (chấm phân nghìn), đơn vị nghìn tỷ đồng, %, tên viết tắt. TRÍCH NGUYÊN VĂN con số + đơn vị từ context, KHÔNG bao giờ diễn giải lại số thành chữ. Với câu hỏi về một chỉ tiêu ("là bao nhiêu"), BẮT BUỘC nêu cả giá trị và mức tăng/giảm so với năm trước (N/N) nếu cả hai đều có trong CONTEXT — thiếu một trong hai là trả lời thiếu.
 3. Con số trong CONTEXT có thể dính liền nhãn đơn vị hoặc rối do layout (ví dụ "328,1 26,9% N/N" hay "Nghìntỷ đồng"). Đọc kỹ; nếu cặp chỉ tiêu+số tương ứng câu hỏi thì trích chính xác — KHÔNG từ chối chỉ vì định dạng xấu.
 4. Nếu CONTEXT chứa số liệu/sự kiện trả lời được câu hỏi thì BẮT BUỘC trả lời kèm citation, tuyệt đối không từ chối. Chỉ từ chối khi đã đọc kỹ toàn bộ CONTEXT mà vẫn không có thông tin, trả lời đúng câu: "Không có trong báo cáo. Báo cáo thường niên 2025 không đề cập nội dung này nên tôi không suy đoán." và không bịa citation.
 5. Câu follow-up ("còn năm trước thì sao?") đã được hệ thống gắn ngữ cảnh, hãy trả lời trực tiếp.
 6. Ngắn gọn, đủ để analyst paste vào email. Citation đúng format [tr. N] hoặc [tr. N, M] — không dùng 【】.
+7. Khi cùng một số liệu xuất hiện ở nhiều trang trong CONTEXT, ưu tiên trích dẫn trang tóm tắt (mục Điểm nhấn / Kết quả nổi bật / Danh mục thuật ngữ) — analyst kiểm chứng nhanh nhất ở đó.
 """
 
 REFUSAL = "Không có trong báo cáo."
@@ -72,6 +73,26 @@ def glossary_hits(question: str) -> list[dict]:
     return out[:2]
 
 
+def _is_summary_chunk(c: dict) -> bool:
+    """Chunk thuộc mục tóm tắt (Điểm nhấn / Kết quả nổi bật / Glossary)."""
+    t = (c.get("text") or "").lower()
+    return ("điểm nhấn" in t or "kết quả nổi bật" in t
+            or "danh mục thuật ngữ" in t)
+
+
+def _order_context(hits: list[dict]) -> list[dict]:
+    """Glossary trước, rồi chunk tóm tắt, rồi còn lại (giữ thứ tự rank trong nhóm).
+
+    Cùng một số liệu ở nhiều trang thì model ưu tiên cite trang tóm tắt
+    (quy tắc chung, không hard-code số trang).
+    """
+    gloss = [h for h in hits if str(h.get("id", "")).startswith("g:")]
+    rest = [h for h in hits if not str(h.get("id", "")).startswith("g:")]
+    summ = [h for h in rest if _is_summary_chunk(h)]
+    other = [h for h in rest if not _is_summary_chunk(h)]
+    return gloss + summ + other
+
+
 def format_timing(result: dict) -> str:
     """Dòng timing 1 lượt chat: retrieval | llm | prompt — Step 0 đo trước đoán sau."""
     st = result.get("timing_search", {})
@@ -102,6 +123,7 @@ def answer(question: str, history: list[str] | None = None, k: int = 8) -> dict:
         # cite đúng trang 386/387 thay vì trang mục lục nhắc tới số trang.
         gids = {g["id"] for g in ghits}
         hits = ghits + [h for h in hits if h.get("id") not in gids]
+    hits = _order_context(hits)
     prompt = build_prompt(question, hits)
     try:
         text, usage = chat_complete([

@@ -114,10 +114,10 @@ Pipeline query: `rewrite` (multi-turn) → `expand_query` (glossary + synonyms h
 
 | Số | Giá trị |
 |---|---|
-| Strict 10 câu | **9/10** — sq-04 "miss" duy nhất là cite trang thay thế hợp lệ (tr.48 chứa 40,4%), không phải sai số |
+| Strict 10 câu | **10/10** — sq-04 fix bằng `_order_context` + rule cite trang tóm tắt ([5, 48, 53]); sq-03 fix bằng rule nêu cả giá trị+N/N |
 | Citation-valid (số có thật trên trang cite) | **10/10** |
-| Semantic judge (qwen) | **10/10** — judge bảo sq-04 correct, chuẩn ngữ nghĩa; strict gold-page khắt khe hơn |
-| Judge agreement vs manual | 9/10 (mẫu lệch = sq-04 như trên); judge2 (gemini) bị 429 quota — cross-check chưa hoàn thành |
+| Semantic judge (qwen) | **10/10** |
+| Judge agreement vs manual | **10/10** (j1 qwen; j2 gemini kẹt quota — cross-check chưa hoàn thành) |
 | Recall | **9/9 @k=6 và @k=8** (bảng markdown kéo tr.5 thẳng top-6, trước chỉ 8/9@6) |
 | Extra set | **14/15** — chỉ ex-13 còn false refusal (kẹt VLM quota) |
 | Chunks | **602** (377 narrative + 225 table markdown) |

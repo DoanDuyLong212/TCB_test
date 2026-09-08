@@ -1,4 +1,19 @@
-from src.chat import build_prompt, extract_citations, normalize_citations
+from src.chat import _order_context, build_prompt, extract_citations, normalize_citations
+
+
+def test_summary_chunks_ordered_first():
+    body = {"id": "p24L", "printed_page": 48, "text": "tỷ lệ CASA đạt 40,4% vào cuối năm"}
+    summ = {"id": "p2R", "printed_page": 5, "text": "Điểm nhấn 2025 Tỷ lệ CASA 40,4%"}
+    gloss = {"id": "g:CASA", "printed_page": 386, "text": "CASA: Tiền gửi không kỳ hạn"}
+    out = _order_context([body, summ, gloss])
+    ids = [h["id"] for h in out]
+    assert ids[0] == "g:CASA", ids
+    assert ids.index("p2R") < ids.index("p24L"), ids
+
+
+def test_prompt_prefers_summary_pages():
+    p = build_prompt("x?", contexts=[])
+    assert "Điểm nhấn" in p or "tóm tắt" in p
 
 
 def test_normalize_bracket_citations():

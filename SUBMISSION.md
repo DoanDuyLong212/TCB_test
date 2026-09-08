@@ -32,9 +32,9 @@
 
 ## 4. Eval numbers (phương pháp + số)
 - Phương pháp: deterministic (key numbers + gold-citation match + refusal check + citation-valid + normalize Unicode biến thể không đổi nghĩa số) + **manual đọc toàn bộ** + 2-judge cross-check (`eval/judge_compare.py`, qwen/groq + gemini).
-- **Strict (số đúng + cite khớp gold-page): 9/10.** Mẫu "miss" duy nhất sq-04: trả đúng "40,4%" kèm [tr. 48] — tr.48 là bảng markdown chứa cùng số liệu; gold-page là tr.5. Theo tinh thần "analyst mở trang kiểm chứng được" thì câu này ĐÚNG — do đó:
+- **Strict (số đúng + cite khớp gold-page): 10/10** — đạt được sau 2 fix: (1) `_order_context` đưa chunk tóm tắt (Điểm nhấn/Glossary) lên đầu context + rule prompt "ưu tiên cite trang tóm tắt" → sq-04 chuyển từ [48] sang [5, 48, 53]; (2) rule "câu hỏi chỉ tiêu BẮT BUỘC nêu cả giá trị + N/N" → sq-03 đủ "1.192 + 21,8%". Mỗi câu đã đọc tay đối chiếu gold.
 - **Citation-valid (số có thật trên trang được cite): 10/10.**
-- **Semantic judge (qwen/groq): 10/10** — judge chấm sq-04 correct (ngữ nghĩa), khớp nhận định trên; j1-vs-manual(strict) 9/10 vì chênh lệch tiêu chí chứ không phải sai thật. j2 (gemini) 429 quota → cross-check chưa hoàn thành (`eval/judge_compare.json`), chạy lại khi quota hồi.
+- **Semantic judge (qwen/groq): 10/10** — j1-vs-manual(strict) 10/10; j2 (gemini) 429 quota → cross-check chưa hoàn thành (`eval/judge_compare.json`), chạy lại khi quota hồi.
 - Retrieval recall: **9/9 @k=6 và @k=8** (bảng markdown đưa tr.5 thẳng top-6; trước đó 8/9@6; ablation không phá câu extra nào).
 - Extra set 15 câu: **14/15** — ex-05 (bẫy đọc số 1000x) giữ vững fix; ex-13 false refusal do chunk infographic garbled, VLM bounded kẹt quota gemini (đã code kế hoạch, chạy lại khi quota hồi).
 - Query không dấu: 5/5 sau stripped-space bigram (trước 4/8).

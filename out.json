@@ -15,22 +15,40 @@
    269,
    98
   ],
+  "prompt_chars": 21849,
+  "prompt_tokens_est": 5462,
+  "timing_search": {
+   "rewrite_expand_s": 0.007,
+   "embed_s": 0.235,
+   "rank_s": 0.008,
+   "rerank_s": 0.031,
+   "total_s": 0.28
+  },
   "provider": "groq",
   "model": "qwen/qwen3.8-27b",
-  "latency_s": 1.63,
+  "latency_s": 1.26,
+  "timing": {
+   "attempts": [
+    {
+     "host": "api.groq.com",
+     "ok": true,
+     "latency_s": 1.26
+    }
+   ],
+   "sleep_s": 0.0
+  },
   "id": "sq-01"
  },
  {
   "question": "Năm 2025, Techcombank được S&P Global Ratings và Fitch Ratings xếp hạng tín nhiệm ở mức nào?",
-  "answer": "Năm 2025, Techcombank được **S&P Global Ratings** nâng hạng lên **BB** với triển vọng **Ổn định**, và **Fitch Ratings** lần đầu tiên xếp hạng tín nhiệm dài hạn ở mức **BB‑** với triển vọng **“Tích cực”**[tr. 43][tr. 4].",
+  "answer": "Năm 2025, Techcombank được **S&P Global Ratings** nâng lên mức **BB** với triển vọng **Ổn định**, và **Fitch Ratings** lần đầu tiên xếp hạng tín nhiệm dài hạn ở mức **BB‑** với triển vọng **“Tích cực”**[tr. 4].",
   "citations": [
-   43,
    4
   ],
   "retrieved_pages": [
    387,
-   43,
    4,
+   43,
    35,
    243,
    232,
@@ -38,9 +56,34 @@
    387,
    236
   ],
+  "prompt_chars": 20151,
+  "prompt_tokens_est": 5037,
+  "timing_search": {
+   "rewrite_expand_s": 0.002,
+   "embed_s": 0.213,
+   "rank_s": 0.004,
+   "rerank_s": 0.029,
+   "total_s": 0.248
+  },
   "provider": "groq",
   "model": "openai/gpt-oss-120b",
-  "latency_s": 2.15,
+  "latency_s": 2.05,
+  "timing": {
+   "attempts": [
+    {
+     "host": "api.groq.com",
+     "ok": false,
+     "code": 429,
+     "latency_s": 0.31
+    },
+    {
+     "host": "api.groq.com",
+     "ok": true,
+     "latency_s": 2.05
+    }
+   ],
+   "sleep_s": 0.0
+  },
   "id": "sq-02"
  },
  {
@@ -59,31 +102,71 @@
    4,
    377
   ],
+  "prompt_chars": 16355,
+  "prompt_tokens_est": 4088,
+  "timing_search": {
+   "rewrite_expand_s": 0.007,
+   "embed_s": 0.236,
+   "rank_s": 0.004,
+   "rerank_s": 0.019,
+   "total_s": 0.266
+  },
   "provider": "groq",
   "model": "qwen/qwen3.8-27b",
-  "latency_s": 0.88,
+  "latency_s": 1.12,
+  "timing": {
+   "attempts": [
+    {
+     "host": "api.groq.com",
+     "ok": true,
+     "latency_s": 1.12
+    }
+   ],
+   "sleep_s": 0.0
+  },
   "id": "sq-03"
  },
  {
   "question": "Tỷ lệ CASA của Techcombank năm 2025 là bao nhiêu?",
-  "answer": "Tỷ lệ CASA của Techcombank năm 2025 đạt **40,4%** [tr. 48].",
+  "answer": "Tỷ lệ CASA của Techcombank năm 2025 đạt 40,4%, dẫn đầu ngành [tr. 5, 48, 53].",
   "citations": [
-   48
+   5,
+   48,
+   53
   ],
   "retrieved_pages": [
    386,
    15,
    48,
    59,
-   328,
    5,
    4,
-   53,
-   71
+   71,
+   328,
+   53
   ],
+  "prompt_chars": 16234,
+  "prompt_tokens_est": 4058,
+  "timing_search": {
+   "rewrite_expand_s": 0.002,
+   "embed_s": 0.227,
+   "rank_s": 0.005,
+   "rerank_s": 0.02,
+   "total_s": 0.255
+  },
   "provider": "groq",
-  "model": "openai/gpt-oss-120b",
-  "latency_s": 1.33,
+  "model": "qwen/qwen3.8-27b",
+  "latency_s": 1.63,
+  "timing": {
+   "attempts": [
+    {
+     "host": "api.groq.com",
+     "ok": true,
+     "latency_s": 1.63
+    }
+   ],
+   "sleep_s": 0.0
+  },
   "id": "sq-04"
  },
  {
@@ -104,16 +187,156 @@
    98,
    14
   ],
+  "prompt_chars": 17545,
+  "prompt_tokens_est": 4386,
+  "timing_search": {
+   "rewrite_expand_s": 0.001,
+   "embed_s": 0.223,
+   "rank_s": 0.004,
+   "rerank_s": 0.024,
+   "total_s": 0.252
+  },
   "provider": "groq",
   "model": "qwen/qwen3.8-27b",
-  "latency_s": 1.03,
+  "latency_s": 1.09,
+  "timing": {
+   "attempts": [
+    {
+     "host": "api.groq.com",
+     "ok": false,
+     "code": 429,
+     "latency_s": 0.3
+    },
+    {
+     "host": "api.groq.com",
+     "ok": false,
+     "code": 429,
+     "latency_s": 0.31
+    },
+    {
+     "host": "api.groq.com",
+     "ok": false,
+     "code": 429,
+     "latency_s": 0.3
+    },
+    {
+     "host": "api.groq.com",
+     "ok": false,
+     "code": 429,
+     "latency_s": 0.31
+    },
+    {
+     "host": "api.groq.com",
+     "ok": false,
+     "code": 429,
+     "latency_s": 0.22
+    },
+    {
+     "host": "api.groq.com",
+     "ok": false,
+     "code": 429,
+     "latency_s": 0.24
+    },
+    {
+     "host": "api.groq.com",
+     "ok": false,
+     "code": 429,
+     "latency_s": 0.36
+    },
+    {
+     "host": "api.groq.com",
+     "ok": false,
+     "code": 429,
+     "latency_s": 0.3
+    },
+    {
+     "host": "api.groq.com",
+     "ok": false,
+     "code": 429,
+     "latency_s": 0.31
+    },
+    {
+     "host": "api.groq.com",
+     "ok": false,
+     "code": 429,
+     "latency_s": 0.3
+    },
+    {
+     "host": "api.groq.com",
+     "ok": false,
+     "code": 429,
+     "latency_s": 0.25
+    },
+    {
+     "host": "api.groq.com",
+     "ok": false,
+     "code": 429,
+     "latency_s": 0.23
+    },
+    {
+     "host": "api.groq.com",
+     "ok": false,
+     "code": 429,
+     "latency_s": 0.28
+    },
+    {
+     "host": "api.groq.com",
+     "ok": false,
+     "code": 429,
+     "latency_s": 0.3
+    },
+    {
+     "host": "api.groq.com",
+     "ok": false,
+     "code": 429,
+     "latency_s": 0.31
+    },
+    {
+     "host": "api.groq.com",
+     "ok": false,
+     "code": 429,
+     "latency_s": 0.22
+    },
+    {
+     "host": "api.groq.com",
+     "ok": false,
+     "code": 429,
+     "latency_s": 0.29
+    },
+    {
+     "host": "api.groq.com",
+     "ok": false,
+     "code": 429,
+     "latency_s": 0.23
+    },
+    {
+     "host": "api.groq.com",
+     "ok": false,
+     "code": 429,
+     "latency_s": 0.39
+    },
+    {
+     "host": "api.groq.com",
+     "ok": false,
+     "code": 429,
+     "latency_s": 0.31
+    },
+    {
+     "host": "api.groq.com",
+     "ok": true,
+     "latency_s": 1.09
+    }
+   ],
+   "sleep_s": 30.0
+  },
   "id": "sq-05"
  },
  {
   "question": "Tổng thu nhập hoạt động năm 2025 của Techcombank là bao nhiêu, và tốc độ tăng trưởng kép giai đoạn 2018–2025 của chỉ tiêu này là bao nhiêu?",
-  "answer": "Tổng thu nhập hoạt động năm 2025 của Techcombank đạt 53,4 nghìn tỷ đồng, tăng trưởng 13,6% so với cùng kỳ năm trước [tr. 5, 48]. Tốc độ tăng trưởng kép (CAGR) của chỉ tiêu này trong giai đoạn 2018–2025 là 16,5% [tr. 5].",
+  "answer": "Tổng thu nhập hoạt động năm 2025 của Techcombank đạt 53,4 nghìn tỷ đồng, tăng 13,6% so với cùng kỳ năm trước [tr. 5, 15, 48]. Tốc độ tăng trưởng kép (CAGR) của chỉ tiêu này trong giai đoạn 2018–2025 là 16,5% [tr. 5].",
   "citations": [
    5,
+   15,
    48,
    5
   ],
@@ -127,14 +350,33 @@
    124,
    48
   ],
+  "prompt_chars": 14768,
+  "prompt_tokens_est": 3692,
+  "timing_search": {
+   "rewrite_expand_s": 0.002,
+   "embed_s": 0.219,
+   "rank_s": 0.007,
+   "rerank_s": 0.026,
+   "total_s": 0.254
+  },
   "provider": "groq",
   "model": "qwen/qwen3.8-27b",
-  "latency_s": 0.86,
+  "latency_s": 1.13,
+  "timing": {
+   "attempts": [
+    {
+     "host": "api.groq.com",
+     "ok": true,
+     "latency_s": 1.13
+    }
+   ],
+   "sleep_s": 0.0
+  },
   "id": "sq-06"
  },
  {
   "question": "Dư nợ vay của Khối Ngân hàng Bán lẻ năm 2025 là bao nhiêu và tăng bao nhiêu phần trăm so với năm trước?",
-  "answer": "Dư nợ vay của Khối Ngân hàng Bán lẻ năm 2025 đạt **328,1 nghìn tỷ đồng**, tăng **26,9 %** so với năm trước [N/N] [tr. 59]",
+  "answer": "Dư nợ vay của Khối Ngân hàng Bán lẻ (RBG) năm 2025 đạt **328,1 nghìn tỷ đồng**, tăng **26,9 %** so với năm trước [N/N] [tr. 59].",
   "citations": [
    59
   ],
@@ -148,9 +390,34 @@
    48,
    111
   ],
+  "prompt_chars": 15405,
+  "prompt_tokens_est": 3851,
+  "timing_search": {
+   "rewrite_expand_s": 0.003,
+   "embed_s": 0.211,
+   "rank_s": 0.011,
+   "rerank_s": 0.029,
+   "total_s": 0.253
+  },
   "provider": "groq",
   "model": "openai/gpt-oss-120b",
-  "latency_s": 1.84,
+  "latency_s": 1.38,
+  "timing": {
+   "attempts": [
+    {
+     "host": "api.groq.com",
+     "ok": false,
+     "code": 429,
+     "latency_s": 0.26
+    },
+    {
+     "host": "api.groq.com",
+     "ok": true,
+     "latency_s": 1.38
+    }
+   ],
+   "sleep_s": 0.0
+  },
   "id": "sq-07"
  },
  {
@@ -164,20 +431,159 @@
    386,
    2,
    387,
-   387,
    3,
    58,
    59,
+   387,
    159
   ],
+  "prompt_chars": 14980,
+  "prompt_tokens_est": 3745,
+  "timing_search": {
+   "rewrite_expand_s": 0.003,
+   "embed_s": 0.224,
+   "rank_s": 0.005,
+   "rerank_s": 0.031,
+   "total_s": 0.263
+  },
   "provider": "groq",
   "model": "qwen/qwen3.8-27b",
-  "latency_s": 1.02,
+  "latency_s": 1.06,
+  "timing": {
+   "attempts": [
+    {
+     "host": "api.groq.com",
+     "ok": false,
+     "code": 429,
+     "latency_s": 0.29
+    },
+    {
+     "host": "api.groq.com",
+     "ok": false,
+     "code": 429,
+     "latency_s": 0.31
+    },
+    {
+     "host": "api.groq.com",
+     "ok": false,
+     "code": 429,
+     "latency_s": 0.31
+    },
+    {
+     "host": "api.groq.com",
+     "ok": false,
+     "code": 429,
+     "latency_s": 0.24
+    },
+    {
+     "host": "api.groq.com",
+     "ok": false,
+     "code": 429,
+     "latency_s": 0.23
+    },
+    {
+     "host": "api.groq.com",
+     "ok": false,
+     "code": 429,
+     "latency_s": 0.35
+    },
+    {
+     "host": "api.groq.com",
+     "ok": false,
+     "code": 429,
+     "latency_s": 0.31
+    },
+    {
+     "host": "api.groq.com",
+     "ok": false,
+     "code": 429,
+     "latency_s": 0.37
+    },
+    {
+     "host": "api.groq.com",
+     "ok": false,
+     "code": 429,
+     "latency_s": 0.25
+    },
+    {
+     "host": "api.groq.com",
+     "ok": false,
+     "code": 429,
+     "latency_s": 0.31
+    },
+    {
+     "host": "api.groq.com",
+     "ok": false,
+     "code": 429,
+     "latency_s": 0.28
+    },
+    {
+     "host": "api.groq.com",
+     "ok": false,
+     "code": 429,
+     "latency_s": 0.26
+    },
+    {
+     "host": "api.groq.com",
+     "ok": false,
+     "code": 429,
+     "latency_s": 0.31
+    },
+    {
+     "host": "api.groq.com",
+     "ok": false,
+     "code": 429,
+     "latency_s": 0.22
+    },
+    {
+     "host": "api.groq.com",
+     "ok": false,
+     "code": 429,
+     "latency_s": 0.28
+    },
+    {
+     "host": "api.groq.com",
+     "ok": false,
+     "code": 429,
+     "latency_s": 0.31
+    },
+    {
+     "host": "api.groq.com",
+     "ok": false,
+     "code": 429,
+     "latency_s": 0.25
+    },
+    {
+     "host": "api.groq.com",
+     "ok": false,
+     "code": 429,
+     "latency_s": 0.26
+    },
+    {
+     "host": "api.groq.com",
+     "ok": false,
+     "code": 429,
+     "latency_s": 0.31
+    },
+    {
+     "host": "api.groq.com",
+     "ok": false,
+     "code": 429,
+     "latency_s": 0.24
+    },
+    {
+     "host": "api.groq.com",
+     "ok": true,
+     "latency_s": 1.06
+    }
+   ],
+   "sleep_s": 30.0
+  },
   "id": "sq-08"
  },
  {
   "question": "Theo danh mục thuật ngữ viết tắt của báo cáo, CASA là viết tắt của thuật ngữ gì?",
-  "answer": "CASA là viết tắt của “Tiền gửi không kỳ hạn” [tr. 386]",
+  "answer": "CASA là viết tắt của **Tiền gửi không kỳ hạn**[tr. 386].",
   "citations": [
    386
   ],
@@ -185,16 +591,41 @@
    386,
    386,
    387,
-   386,
    3,
+   386,
    329,
    328,
    347,
    346
   ],
+  "prompt_chars": 15490,
+  "prompt_tokens_est": 3872,
+  "timing_search": {
+   "rewrite_expand_s": 0.002,
+   "embed_s": 0.242,
+   "rank_s": 0.007,
+   "rerank_s": 0.028,
+   "total_s": 0.279
+  },
   "provider": "groq",
   "model": "openai/gpt-oss-120b",
-  "latency_s": 1.24,
+  "latency_s": 1.64,
+  "timing": {
+   "attempts": [
+    {
+     "host": "api.groq.com",
+     "ok": false,
+     "code": 429,
+     "latency_s": 0.28
+    },
+    {
+     "host": "api.groq.com",
+     "ok": true,
+     "latency_s": 1.64
+    }
+   ],
+   "sleep_s": 0.0
+  },
   "id": "sq-09"
  },
  {
@@ -211,9 +642,160 @@
    84,
    85
   ],
+  "prompt_chars": 15891,
+  "prompt_tokens_est": 3972,
+  "timing_search": {
+   "rewrite_expand_s": 0.001,
+   "embed_s": 0.214,
+   "rank_s": 0.004,
+   "rerank_s": 0.019,
+   "total_s": 0.238
+  },
   "provider": "groq",
   "model": "qwen/qwen3.8-27b",
-  "latency_s": 1.1,
+  "latency_s": 1.02,
+  "timing": {
+   "attempts": [
+    {
+     "host": "api.groq.com",
+     "ok": false,
+     "code": 429,
+     "latency_s": 0.32
+    },
+    {
+     "host": "api.groq.com",
+     "ok": false,
+     "code": 429,
+     "latency_s": 0.31
+    },
+    {
+     "host": "api.groq.com",
+     "ok": false,
+     "code": 429,
+     "latency_s": 0.3
+    },
+    {
+     "host": "api.groq.com",
+     "ok": false,
+     "code": 429,
+     "latency_s": 0.31
+    },
+    {
+     "host": "api.groq.com",
+     "ok": false,
+     "code": 429,
+     "latency_s": 0.32
+    },
+    {
+     "host": "api.groq.com",
+     "ok": false,
+     "code": 429,
+     "latency_s": 0.3
+    },
+    {
+     "host": "api.groq.com",
+     "ok": false,
+     "code": 429,
+     "latency_s": 0.31
+    },
+    {
+     "host": "api.groq.com",
+     "ok": false,
+     "code": 429,
+     "latency_s": 0.31
+    },
+    {
+     "host": "api.groq.com",
+     "ok": false,
+     "code": 429,
+     "latency_s": 0.31
+    },
+    {
+     "host": "api.groq.com",
+     "ok": false,
+     "code": 429,
+     "latency_s": 0.21
+    },
+    {
+     "host": "api.groq.com",
+     "ok": false,
+     "code": 429,
+     "latency_s": 0.34
+    },
+    {
+     "host": "api.groq.com",
+     "ok": false,
+     "code": 429,
+     "latency_s": 0.22
+    },
+    {
+     "host": "api.groq.com",
+     "ok": false,
+     "code": 429,
+     "latency_s": 0.28
+    },
+    {
+     "host": "api.groq.com",
+     "ok": false,
+     "code": 429,
+     "latency_s": 0.31
+    },
+    {
+     "host": "api.groq.com",
+     "ok": false,
+     "code": 429,
+     "latency_s": 0.31
+    },
+    {
+     "host": "api.groq.com",
+     "ok": false,
+     "code": 429,
+     "latency_s": 0.3
+    },
+    {
+     "host": "api.groq.com",
+     "ok": false,
+     "code": 429,
+     "latency_s": 0.42
+    },
+    {
+     "host": "api.groq.com",
+     "ok": false,
+     "code": 429,
+     "latency_s": 0.39
+    },
+    {
+     "host": "api.groq.com",
+     "ok": false,
+     "code": 429,
+     "latency_s": 0.63
+    },
+    {
+     "host": "api.groq.com",
+     "ok": false,
+     "code": 429,
+     "latency_s": 0.41
+    },
+    {
+     "host": "api.groq.com",
+     "ok": false,
+     "code": 429,
+     "latency_s": 0.27
+    },
+    {
+     "host": "api.groq.com",
+     "ok": false,
+     "code": 429,
+     "latency_s": 0.31
+    },
+    {
+     "host": "api.groq.com",
+     "ok": true,
+     "latency_s": 1.02
+    }
+   ],
+   "sleep_s": 30.0
+  },
   "id": "sq-10"
  }
 ]

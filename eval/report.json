@@ -1,6 +1,6 @@
 {
- "score": "9/10",
- "accuracy": 0.9,
+ "score": "10/10",
+ "accuracy": 1.0,
  "citation_valid_score": "10/10",
  "rows": [
   {
@@ -33,13 +33,12 @@
    "citation_valid": true,
    "retrieved_ok": true,
    "cited": [
-    43,
     4
    ],
    "retrieved": [
     387,
-    43,
     4,
+    43,
     35,
     243,
     232,
@@ -73,26 +72,28 @@
   },
   {
    "id": "sq-04",
-   "ok": false,
+   "ok": true,
    "numbers_ok": true,
-   "cite_ok": false,
+   "cite_ok": true,
    "citation_valid": true,
    "retrieved_ok": true,
    "cited": [
-    48
+    5,
+    48,
+    53
    ],
    "retrieved": [
     386,
     15,
     48,
     59,
-    328,
     5,
     4,
-    53,
-    71
+    71,
+    328,
+    53
    ],
-   "fail": "generation_error"
+   "fail": null
   },
   {
    "id": "sq-05",
@@ -127,6 +128,7 @@
    "retrieved_ok": true,
    "cited": [
     5,
+    15,
     48,
     5
    ],
@@ -179,10 +181,10 @@
     386,
     2,
     387,
-    387,
     3,
     58,
     59,
+    387,
     159
    ],
    "fail": null
@@ -201,8 +203,8 @@
     386,
     386,
     387,
-    386,
     3,
+    386,
     329,
     328,
     347,
