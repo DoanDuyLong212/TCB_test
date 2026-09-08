@@ -65,7 +65,9 @@ python3 -m src.chat   # REPL tiếng Việt, gõ exit để thoát
 - Prereq: Python 3.10+, pip, file PDF đặt cạnh repo.
 
 ## 7. Video demo
-- Quay one-take 3–5 phút: `./run.sh` (thấy recall), REPL 3 câu (profile/key-figure/glossary), 1 câu unanswerable (refusal), mở `eval/report.json`. Giữ lỗi thật nếu gặp 429.
+- Link (one-take 3-5 phút, có giọng, đi qua 10 câu mẫu + 1 follow-up multi-turn, latency và refusal thật):
+  https://drive.google.com/file/d/1G63-ZxCj9fCGwPoTVirhiCn0nOoTLa7J/view?usp=sharing
+- Tái hiện đúng nội dung video: `PROVIDER=groq python3 -m src.chat` (paste 10 câu theo thứ tự `sample_question.json`, chèn `còn năm trước thì sao?` sau câu tổng tài sản), rồi `python3 -m src.eval --pred out.json --out eval/report.json`.
 
 ## 8. Với 10x thời gian & ngân sách
 1. Rerank cross-encoder Việt + benchmark embedding (BGE-M3 vs E5 vs OpenAI) trên eval set riêng.
