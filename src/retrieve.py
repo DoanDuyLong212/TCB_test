@@ -14,6 +14,8 @@ _FAISS = None
 _BM25 = None
 _BM25_IDS: list[str] | None = None
 _ID2CHUNK: dict[str, dict] | None = None
+# Phase timings của lần search() gần nhất (Step 0: đo trước, đoán sau).
+LAST_SEARCH_TIMINGS: dict = {}
 
 
 def _load():
@@ -138,13 +140,18 @@ def _embed_query(text: str) -> np.ndarray | None:
 
 
 def search(query: str, k: int = 5, history: list[str] | None = None) -> list[dict]:
+    import time as _time
+
     _load()
     assert CHUNKS is not None and _ID2CHUNK is not None
+    t0 = _time.time()
     q = expand_query(rewrite(query, history))
+    t_rewrite = _time.time()
 
     scores: dict[str, float] = {}
     # dense (weight 1.0)
     qv = _embed_query(q)
+    t_embed = _time.time()
     if qv is not None and _FAISS is not None:
         try:
             if qv.shape[1] == _FAISS.d:
@@ -166,6 +173,7 @@ def search(query: str, k: int = 5, history: list[str] | None = None) -> list[dic
             scores[cid] = scores.get(cid, 0.0) + 2.0 / (60 + rank)
     except Exception:
         pass
+    t_rank = _time.time()
 
     # Không cắt pool: bonus (bigram/date/section) phải tới được mọi ứng viên.
     # 377 docs nên re-rank toàn bộ vẫn rẻ (<0.1s).
@@ -200,4 +208,12 @@ def search(query: str, k: int = 5, history: list[str] | None = None) -> list[dic
         out.append(c)
     # trace for eval attribution
     pathlib.Path("index").mkdir(exist_ok=True)
+    t_end = _time.time()
+    LAST_SEARCH_TIMINGS.update({
+        "rewrite_expand_s": round(t_rewrite - t0, 3),
+        "embed_s": round(t_embed - t_rewrite, 3),
+        "rank_s": round(t_rank - t_embed, 3),
+        "rerank_s": round(t_end - t_rank, 3),
+        "total_s": round(t_end - t0, 3),
+    })
     return out

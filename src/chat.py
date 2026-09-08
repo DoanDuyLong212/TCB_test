@@ -72,7 +72,28 @@ def glossary_hits(question: str) -> list[dict]:
     return out[:2]
 
 
+def format_timing(result: dict) -> str:
+    """Dòng timing 1 lượt chat: retrieval | llm | prompt — Step 0 đo trước đoán sau."""
+    st = result.get("timing_search", {})
+    lt = result.get("timing", {}) or {}
+    atts = lt.get("attempts", []) or []
+    oks = sum(1 for a in atts if a.get("ok"))
+    prov = result.get("provider", "?")
+    model = (result.get("model") or "?").split("/")[-1]
+    lat = result.get("latency_s", "?")
+    return (
+        f"[timing] retrieval {st.get('total_s', '?')}s "
+        f"(rewrite {st.get('rewrite_expand_s', '?')}s | embed {st.get('embed_s', '?')}s | "
+        f"rank {st.get('rank_s', '?')}s | rerank {st.get('rerank_s', '?')}s) | "
+        f"llm {lat}s [{prov}/{model} "
+        f"attempts {oks}/{len(atts)} ok, waits {lt.get('sleep_s', 0)}s] | "
+        f"prompt ~{result.get('prompt_tokens_est', '?')} tokens (est)"
+    )
+
+
 def answer(question: str, history: list[str] | None = None, k: int = 8) -> dict:
+    from src.retrieve import LAST_SEARCH_TIMINGS
+
     history = history or []
     hits = search(question, k=k, history=history)
     ghits = glossary_hits(question)
@@ -92,9 +113,17 @@ def answer(question: str, history: list[str] | None = None, k: int = 8) -> dict:
         # làm bẩn eval (refusal giả). Đánh dấu error rõ ràng.
         text, usage = f"LỖI KỸ THUẬT gọi model: {str(e)[:150]}", {"error": True}
     text = normalize_citations(text)
+    from src.llm import LAST_LLM_TIMINGS
+
+    timing_search = dict(LAST_SEARCH_TIMINGS)
+    timing_llm = dict(usage.get("timing") or LAST_LLM_TIMINGS)
     return {"question": question, "answer": text,
             "citations": extract_citations(text),
-            "retrieved_pages": [h.get("printed_page") for h in hits], **usage}
+            "retrieved_pages": [h.get("printed_page") for h in hits],
+            "prompt_chars": len(prompt),
+            "prompt_tokens_est": len(prompt) // 4,
+            "timing_search": timing_search,
+            **usage, "timing": timing_llm}
 
 
 def main() -> None:
@@ -138,6 +167,7 @@ def main() -> None:
             continue
         r = answer(q, history=history)
         print(f"Bot> {r['answer']}\n")
+        print(format_timing(r))
         history.append(q)
 
 
