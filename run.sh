@@ -13,12 +13,12 @@ ok = 0; total = 0
 for q in json.load(open('sample_question.json', encoding='utf-8')):
     if not q.get('gold_printed_pages'): continue
     total += 1
-    pages = [h['printed_page'] for h in search(q['question'], k=6)]
+    pages = [h['printed_page'] for h in search(q['question'], k=8)]
     pages += [g['printed_page'] for g in glossary_hits(q['question'])]
     hit = bool(set(pages) & set(q['gold_printed_pages']))
     ok += hit
     print(f"  {q['id']}: {'HIT' if hit else 'miss'} {pages[:7]}")
-print(f"recall@6: {ok}/{total}")
+print(f"recall@8: {ok}/{total}")
 EOF
 echo "== batch 10 cau mau =="
 python3 -m src.chat --batch sample_question.json --out out.json

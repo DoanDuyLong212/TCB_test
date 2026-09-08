@@ -59,62 +59,64 @@ PROVIDER=groq python3 -m src.chat
 
 ---
 
-## 3. KỊCH BẢN QUAY VIDEO DEMO (one-take 3–5 phút)
+## 3. KỊCH BẢN QUAY VIDEO DEMO (one-take, mục tiêu ≤4:30)
 
-> Chuẩn bị trước khi ấn ghi: terminal mở sẵn tại thư mục repo, `.env` đã điền key, window terminal đủ lớn, zoom 110% cho chữ dễ đọc. Demo trên `PROVIDER=groq` cho latency thật nhanh.
+> Quy tắc của đề: **3–5 phút, 1 take duy nhất không cắt, có giọng thuyết minh, đi qua cả 10 câu, latency + lỗi thật.** Diễn tập (rehearsal) thoải mái — chỉ bản nộp là không được cắt.
 
-**[0:00–0:20] Giới thiệu 1 câu**
+### Chuẩn bị (trước khi ấn ghi, 5 phút)
+1. `.env` đã điền key. Terminal: font ≥14pt, window tối đa, zoom 110%.
+2. Mở sẵn `sample_question.json` trong editor bên cạnh để **copy-paste câu hỏi** (gõ tay 10 câu tiếng Việt dài sẽ vượt giờ — paste vẫn là one-take, không vi phạm).
+3. Mic test 10 giây. Tắt thông báo (DND). `cd` sẵn vào thư mục repo.
+4. Diễn tập 1 lần bấm giờ (không ghi) để quen nhịp.
+
+### Kịch bản chi tiết
+
+**[0:00–0:20] Giới thiệu (20s)** — nói 1 câu:
 > "Đây là chatbot trả lời câu hỏi về Báo cáo thường niên Techcombank 2025 cho IR analyst — mọi câu trả lời có citation theo số trang in trên báo cáo, từ chối khi không có thông tin."
 
-**[0:20–0:50] Recall smoke (không tốn quota LLM)**
+**[0:20–0:55] Recall smoke (35s)** — chạy đúng lệnh này:
 ```bash
 ./run.sh
 ```
-Chỉ nói khi phần smoke chạy: "377 chunks từ 197 trang PDF spread — số trang in được parse từ header, mỗi trang PDF chứa 2 trang in. Recall retrieval 9/9." (Dừng ở dòng recall, Ctrl+C nếu muốn bỏ qua batch dài — nhưng nếu dùng `PROVIDER=groq` thì cứ chạy tiếp.) ← **Lưu ý: nếu không kịp, mở terminal thứ 2 chạy lệnh phía dưới thay vì Ctrl+C.**
+Vừa chạy vừa nói: "377 chunks narrative + 225 chunks bảng, từ PDF spread 197 trang — số trang in parse từ header, mỗi trang PDF chứa 2 trang in. Recall retrieval 9/9." **Khi dòng batch 10 câu bắt đầu chạy, Ctrl+C ngay** và nói: "Batch 10 câu chạy nền ~8 phút vì pacing free-tier, kết quả đã có sẵn trong out.json — giờ tôi demo trực tiếp." (Ctrl+C giữa take là bình thường, không phải edit.)
 
-**[0:50–3:00] REPL — đi qua 10 câu mẫu (nhóm theo loại)**
-
-Mở REPL:
+**[0:55–3:15] REPL — 10 câu + 1 follow-up (~12s/câu)** — mở REPL:
 ```bash
 PROVIDER=groq python3 -m src.chat
 ```
-Gõ lần lượt (chờ câu trả lời, đọc to citation):
+Paste từng câu từ editor, chờ ~1–2s, **đọc to chỉ số + citation**:
 
-| Nhóm | Câu gõ | Điểm nói |
+| # | Câu paste | Điểm nói |
 |---|---|---|
-| Company profile | `Tính đến năm 2025, Techcombank có bao nhiêu chi nhánh và phòng giao dịch, và hiện diện tại bao nhiêu tỉnh thành?` | 302 chi nhánh, [tr. 4] |
-| Key figures | `Tổng tài sản của Techcombank tại ngày 31/12/2025 là bao nhiêu?` | **1.192 nghìn tỷ** (giữ format số Việt) |
-| Key figures | `Tỷ lệ CASA của Techcombank năm 2025 là bao nhiêu?` | 40,4% — CASA được expand từ glossary |
-| Key figures | `Tỷ lệ nợ xấu của Techcombank năm 2025 là bao nhiêu?` | 1,13% |
-| Key figures | `Tổng thu nhập hoạt động năm 2025 của Techcombank là bao nhiêu, và tốc độ tăng trưởng kép giai đoạn 2018–2025 của chỉ tiêu này là bao nhiêu?` | 53,4 + CAGR 16,5% |
-| Multi-turn ⭐ | `còn năm trước thì sao?` (ngay sau câu tổng tài sản) | hệ thống hiểu = 2024, không cần nhắc lại |
-| Segment | `Dư nợ vay của Khối Ngân hàng Bán lẻ năm 2025 là bao nhiêu và tăng bao nhiêu phần trăm so với năm trước?` | 328,1 + 26,9% [tr. 58, 59] |
-| Terminology | `Theo danh mục thuật ngữ viết tắt của báo cáo, RBG là viết tắt của khối nào?` | [tr. 387] — trang > số trang PDF |
-| Terminology | `Theo danh mục thuật ngữ viết tắt của báo cáo, CASA là viết tắt của thuật ngữ gì?` | [tr. 386] |
-| Unanswerable ⭐ | `Techcombank dự báo lợi nhuận trước thuế năm 2027 là bao nhiêu?` | refusal: "Không có trong báo cáo..." |
-| Rating | `Năm 2025, Techcombank được S&P Global Ratings và Fitch Ratings xếp hạng tín nhiệm ở mức nào?` | BB / BB- [tr. 4, 43] |
+| 1 | sq-01 chi nhánh/phòng giao dịch | 302 chi nhánh, [tr. 4] |
+| 2 | sq-03 tổng tài sản 31/12/2025 | **1.192 nghìn tỷ** (giữ format số Việt) |
+| 3 | ⭐ `còn năm trước thì sao?` (ngay sau câu 2) | hệ thống hiểu = 2024, không cần nhắc lại |
+| 4 | sq-04 CASA | 40,4% — CASA được expand từ glossary |
+| 5 | sq-05 nợ xấu | 1,13% |
+| 6 | sq-06 tổng thu nhập + CAGR | 53,4 + 16,5% |
+| 7 | sq-07 dư nợ RBG | 328,1 + 26,9% [tr. 58, 59] |
+| 8 | sq-02 xếp hạng S&P/Fitch | BB / BB- [tr. 4, 43] |
+| 9 | sq-08 RBG viết tắt | [tr. 387] — trang lớn hơn số trang PDF |
+| 10 | sq-09 CASA viết tắt | [tr. 386] |
+| 11 | sq-10 dự báo LNTT 2027 ⭐ | refusal: "Không có trong báo cáo..." |
 
 Gõ `exit`.
 
-**[3:00–3:40] Eval report**
+**[3:15–3:50] Eval report (35s)** — chạy:
 ```bash
-python3 -m src.eval --pred out.json --out eval/report.json
-cat eval/report.json
+python3 -m src.eval --pred out.json --out eval/report.json && cat eval/report.json
 ```
-Nói: "Strict 10/10 — số đúng + citation khớp gold + refusal đúng. Phương pháp chấm: deterministic + đọc tay + LLM judge đối chiếu, agreement 10/10 (eval/report_judge.json). Citation-valid kiểm chứng số có thật trên trang được cite."
+Nói: "Strict 9/10 — mẫu duy nhất không khớp gold-page là sq-04, nhưng số đúng và trang cite chứa số thật (citation-valid 10/10). Judge đối chiếu manual 9/10 theo strict, 10/10 theo ngữ nghĩa."
 
-**[3:40–4:10] Extra set tự tạo (chứng minh eval loop)**
-```bash
-cat eval/extra_questions.json | head -20   # hoặc mở file
-```
-Nói: "15 câu tự tạo phủ mảng sample không chạm — bộ này bắt được lỗi thật: model từng đọc sai 1.192 nghìn tỷ thành 1.192 tỷ (sai 1000x, đúng bẫy số Việt trong đề), fix prompt trích nguyên văn và rerun đúng. 14/15 sau fix."
+**[3:50–4:10] Extra set 1 câu (20s)** — nói, không cần mở file:
+> "15 câu tự tạo phủ mảng sample không chạm đạt 14/15 — bộ này từng bắt được lỗi thật: model đọc sai 1.192 nghìn tỷ thành 1.192 tỷ, fix prompt trích nguyên văn và rerun đúng."
 
-**[4:10–4:30] Kết**
-> "Toàn bộ repo: `run.sh` 1 lệnh, index ship sẵn ~4MB, 22 pytest, SUBMISSION.md ghi đủ thử gì-fail gì-cost. Cảm ơn!"
+**[4:10–4:25] Kết (15s)** — `ls` nhanh rồi nói:
+> "Toàn bộ repo: 1 lệnh chạy, index ship sẵn, 26 pytest, SUBMISSION.md ghi đủ thử gì-fail gì-cost. Cảm ơn!"
 
-### Nếu gặp lỗi trong lúc quay (giữ lại, đừng cắt — đề muốn thấy lỗi thật)
-- **429**: hệ thống tự xoay key/fallback groq; nếu quá 3 lần, nói "free-tier quota — hệ thống tách lỗi API khỏi refusal để không làm bẩn eval" rồi chạy lại câu đó.
-- **Câu trả lời chậm**: đây là pacing 45s của Gemini free — demo nên dùng `PROVIDER=groq`.
+### Nếu gặp lỗi khi quay (giữ lại, đừng quay lại)
+- **429 / câu trả lời chậm**: nói "free-tier quota — hệ thống tự xoay key/fallback groq, lỗi API tách khỏi refusal để không làm bẩn eval" rồi chạy lại câu đó.
+- **Câu trả lời khác kỳ vọng nhẹ** (vd cite thêm trang): đọc đúng những gì hiện ra, giải thích 1 câu — trung thực được điểm, highlight reel bị trừ.
 
 ---
 

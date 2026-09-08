@@ -1,6 +1,0 @@
-{
- "n_chunks": 377,
- "dim": 768,
- "emb_model": "BAAI/bge-m3",
- "embedder": "gemini:gemini-embedding-001"
-}
