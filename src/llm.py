@@ -104,7 +104,8 @@ def _try_groq(messages: list[dict], max_tokens: int, temperature: float,
               os.getenv("GEN_MODELS_GROQ",
                         os.getenv("GEN_MODEL", "qwen/qwen3.8-27b,openai/gpt-oss-120b")).split(",")
               if m.strip()]
-    keys = _keys("GROQ_API_KEY", "GROQ_API_KEY_2")
+    keys = _keys("GROQ_API_KEY", "GROQ_API_KEY_2", "GROQ_API_KEY_3",
+                 "GROQ_API_KEY_4", "GROQ_API_KEY_5")
 
     def _call(key: str, model: str) -> tuple[str, dict]:
         data = _post(

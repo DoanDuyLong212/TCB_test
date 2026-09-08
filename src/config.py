@@ -25,8 +25,13 @@ def get_settings() -> dict:
         "masked_keys": {
             "GROQ": mask_key(os.getenv("GROQ_API_KEY", "")),
             "GROQ_2": mask_key(os.getenv("GROQ_API_KEY_2", "")),
+            "GROQ_3": mask_key(os.getenv("GROQ_API_KEY_3", "")),
+            "GROQ_4": mask_key(os.getenv("GROQ_API_KEY_4", "")),
+            "GROQ_5": mask_key(os.getenv("GROQ_API_KEY_5", "")),
             "GEMINI": mask_key(os.getenv("GEMINI_API_KEY", "")),
             "GEMINI_2": mask_key(os.getenv("GEMINI_API_KEY_2", "")),
+            "GEMINI_3": mask_key(os.getenv("GEMINI_API_KEY_3", "")),
+            "GEMINI_4": mask_key(os.getenv("GEMINI_API_KEY_4", "")),
             "OPENROUTER": mask_key(os.getenv("OPENROUTER_API_KEY", "")),
         },
     }
