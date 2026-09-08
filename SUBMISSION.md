@@ -52,7 +52,7 @@
   - Quota chết hẳn: ~90s sleeps + ~10 calls → **2–3 phút rồi báo LỖI KỸ THUẬT** (fail rõ ràng thay vì treo).
   - `BACKOFF_BASE_S` (mặc định 30): REPL đặt 10 để failover nhanh (worst-sleep 30s thay vì 90s).
 - Tiền: $0 (Gemini free-tier cho embedding + Groq free cho generation). Fallback TF-IDF offline: $0.
-- Hạ tầng thực tế: quota Gemini generate free-tier cực tight (provider chain gemini→groq là path mặc định).
+- Hạ tầng thực tế (đo từ body lỗi Groq, không đoán): Groq free-tier giới hạn **TPD 200.000 tokens/ngày/MODEL** (qwen3.8-27b và gpt-oss-120b từng đo Used ~198k → cạn, reset ~30-35 phút theo `try again in`) + **TPM 8000/phút/key** (refill ~107 tok/s). 1 câu hỏi tốn ~6.5-7k tokens → 5 keys ≈ 6 câu back-to-back rồi phải chờ refill. **Mỗi model bucket riêng** nên chain Groq giờ có 3 models (qwen3.8 → gpt-oss-120b → gpt-oss-20b). Lỗi 413 gặp một lần chưa tái hiện được (nghi transient phía router lúc limit-storm) — mitigation là đa dạng model trong chain.
 
 ## 6. Chạy lại
 ```bash

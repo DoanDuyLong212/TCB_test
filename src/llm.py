@@ -106,7 +106,7 @@ def _try_groq(messages: list[dict], max_tokens: int, temperature: float,
     # message.reasoning, content rỗng) -> chỉ dùng dự phòng.
     models = [m.strip() for m in
               os.getenv("GEN_MODELS_GROQ",
-                        os.getenv("GEN_MODEL", "qwen/qwen3.8-27b,openai/gpt-oss-120b")).split(",")
+                        os.getenv("GEN_MODEL", "qwen/qwen3.8-27b,openai/gpt-oss-120b,openai/gpt-oss-20b")).split(",")
               if m.strip()]
     keys = _keys("GROQ_API_KEY", "GROQ_API_KEY_2", "GROQ_API_KEY_3",
                  "GROQ_API_KEY_4", "GROQ_API_KEY_5")
