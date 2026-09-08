@@ -103,7 +103,9 @@
    "citation_valid": true,
    "retrieved_ok": true,
    "cited": [
-    5
+    15,
+    5,
+    48
    ],
    "retrieved": [
     15,
@@ -126,7 +128,8 @@
    "retrieved_ok": true,
    "cited": [
     5,
-    48
+    48,
+    5
    ],
    "retrieved": [
     5,
@@ -151,14 +154,14 @@
     59
    ],
    "retrieved": [
-    48,
-    4,
-    5,
     15,
-    77,
+    59,
+    58,
     14,
-    98,
-    59
+    71,
+    214,
+    77,
+    79
    ],
    "fail": null
   },

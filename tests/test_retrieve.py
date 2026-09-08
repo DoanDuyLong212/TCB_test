@@ -27,6 +27,16 @@ def test_followup_no_year_falls_back_concat():
     assert "dư nợ" in q.lower(), q
 
 
+def test_yoy_comparison_is_not_followup():
+    # "so với năm trước" là câu hỏi YoY hoàn chỉnh — KHÔNG được viết lại
+    # thành chủ đề câu trước (bug: sq-07 mất tr.59 trong batch có history).
+    q = "Dư nợ vay của Khối Ngân hàng Bán lẻ năm 2025 là bao nhiêu và tăng bao nhiêu phần trăm so với năm trước?"
+    out = rewrite(q, history=["Tổng tài sản 2025 là bao nhiêu?"])
+    assert out == q, out
+    hits = search(q, k=8, history=["Tổng tài sản 2025 là bao nhiêu?"])
+    assert 59 in [h["printed_page"] for h in hits]
+
+
 def test_hybrid_returns_printed_4_for_sq01():
     hits = search("Tính đến năm 2025, Techcombank có bao nhiêu chi nhánh và phòng giao dịch, và hiện diện tại bao nhiêu tỉnh thành?", k=5)
     pages = [h["printed_page"] for h in hits]

@@ -1,7 +1,7 @@
 [
  {
   "question": "Tính đến năm 2025, Techcombank có bao nhiêu chi nhánh và phòng giao dịch, và hiện diện tại bao nhiêu tỉnh thành?",
-  "answer": "Techcombank có 302 chi nhánh và phòng giao dịch, hiện diện tại 29 tỉnh thành trên toàn quốc [tr. 4].",
+  "answer": "Techcombank có **302 chi nhánh và phòng giao dịch**, hiện diện tại **29 tỉnh thành** trên toàn quốc. [tr. 4]",
   "citations": [
    4
   ],
@@ -15,30 +15,108 @@
    269,
    98
   ],
-  "prompt_chars": 22895,
-  "prompt_tokens_est": 5723,
+  "prompt_chars": 23039,
+  "prompt_tokens_est": 5759,
   "timing_search": {
-   "rewrite_expand_s": 0.007,
-   "embed_s": 0.239,
-   "rank_s": 0.006,
-   "rerank_s": 0.031,
-   "total_s": 0.282
+   "rewrite_expand_s": 0.02,
+   "embed_s": 0.569,
+   "rank_s": 0.013,
+   "rerank_s": 0.097,
+   "total_s": 0.699
   },
   "provider": "groq",
-  "model": "openai/gpt-oss-120b",
-  "latency_s": 1.54,
+  "model": "openai/gpt-oss-20b",
+  "latency_s": 1.64,
   "timing": {
    "attempts": [
     {
      "host": "api.groq.com",
      "ok": false,
      "code": 429,
-     "latency_s": 0.35
+     "latency_s": 0.4
+    },
+    {
+     "host": "api.groq.com",
+     "ok": false,
+     "code": 429,
+     "latency_s": 0.3
+    },
+    {
+     "host": "api.groq.com",
+     "ok": false,
+     "code": 413,
+     "latency_s": 0.31
+    },
+    {
+     "host": "api.groq.com",
+     "ok": false,
+     "code": 429,
+     "latency_s": 0.31
+    },
+    {
+     "host": "api.groq.com",
+     "ok": false,
+     "code": 429,
+     "latency_s": 0.31
+    },
+    {
+     "host": "api.groq.com",
+     "ok": false,
+     "code": 413,
+     "latency_s": 0.31
+    },
+    {
+     "host": "api.groq.com",
+     "ok": false,
+     "code": 429,
+     "latency_s": 0.31
+    },
+    {
+     "host": "api.groq.com",
+     "ok": false,
+     "code": 429,
+     "latency_s": 0.31
+    },
+    {
+     "host": "api.groq.com",
+     "ok": false,
+     "code": 413,
+     "latency_s": 0.31
+    },
+    {
+     "host": "api.groq.com",
+     "ok": false,
+     "code": 429,
+     "latency_s": 0.52
+    },
+    {
+     "host": "api.groq.com",
+     "ok": false,
+     "code": 429,
+     "latency_s": 0.52
+    },
+    {
+     "host": "api.groq.com",
+     "ok": false,
+     "code": 413,
+     "latency_s": 0.5
+    },
+    {
+     "host": "api.groq.com",
+     "ok": false,
+     "code": 429,
+     "latency_s": 0.51
+    },
+    {
+     "host": "api.groq.com",
+     "ok": false,
+     "code": 429,
+     "latency_s": 0.29
     },
     {
      "host": "api.groq.com",
      "ok": true,
-     "latency_s": 1.54
+     "latency_s": 1.64
     }
    ],
    "sleep_s": 0.0
@@ -47,7 +125,7 @@
  },
  {
   "question": "Năm 2025, Techcombank được S&P Global Ratings và Fitch Ratings xếp hạng tín nhiệm ở mức nào?",
-  "answer": "Năm 2025, Techcombank được S&P Global Ratings xếp hạng **BB** (triển vọng Ổn định) và được Fitch Ratings xếp hạng **BB‑** (triển vọng “Tích cực”) [tr. 4]",
+  "answer": "S&P Global Ratings: BB; Fitch Ratings: BB‑ [tr. 4]",
   "citations": [
    4
   ],
@@ -62,30 +140,54 @@
    387,
    236
   ],
-  "prompt_chars": 21197,
-  "prompt_tokens_est": 5299,
+  "prompt_chars": 21341,
+  "prompt_tokens_est": 5335,
   "timing_search": {
    "rewrite_expand_s": 0.007,
-   "embed_s": 0.214,
-   "rank_s": 0.006,
-   "rerank_s": 0.029,
-   "total_s": 0.256
+   "embed_s": 0.237,
+   "rank_s": 0.004,
+   "rerank_s": 0.027,
+   "total_s": 0.275
   },
   "provider": "groq",
-  "model": "openai/gpt-oss-120b",
-  "latency_s": 1.54,
+  "model": "openai/gpt-oss-20b",
+  "latency_s": 1.34,
   "timing": {
    "attempts": [
     {
      "host": "api.groq.com",
      "ok": false,
      "code": 429,
-     "latency_s": 0.47
+     "latency_s": 0.34
+    },
+    {
+     "host": "api.groq.com",
+     "ok": false,
+     "code": 429,
+     "latency_s": 0.39
+    },
+    {
+     "host": "api.groq.com",
+     "ok": false,
+     "code": 413,
+     "latency_s": 0.31
+    },
+    {
+     "host": "api.groq.com",
+     "ok": false,
+     "code": 429,
+     "latency_s": 0.26
+    },
+    {
+     "host": "api.groq.com",
+     "ok": false,
+     "code": 429,
+     "latency_s": 0.25
     },
     {
      "host": "api.groq.com",
      "ok": true,
-     "latency_s": 1.54
+     "latency_s": 1.34
     }
    ],
    "sleep_s": 0.0
@@ -94,7 +196,7 @@
  },
  {
   "question": "Tổng tài sản của Techcombank tại ngày 31/12/2025 là bao nhiêu?",
-  "answer": "Tổng tài sản tại ngày 31/12/2025 là **1.192 nghìn tỷ đồng**, tăng **21,8 %** so với năm 2024 [tr. 5]",
+  "answer": "Tổng tài sản của Techcombank tại ngày 31/12/2025 là 1.192 nghìn tỷ đồng, tăng 21,8 % so với năm trước. [tr. 5]",
   "citations": [
    5
   ],
@@ -108,99 +210,45 @@
    4,
    377
   ],
-  "prompt_chars": 17283,
-  "prompt_tokens_est": 4320,
+  "prompt_chars": 17427,
+  "prompt_tokens_est": 4356,
   "timing_search": {
-   "rewrite_expand_s": 0.002,
-   "embed_s": 0.235,
-   "rank_s": 0.004,
-   "rerank_s": 0.018,
-   "total_s": 0.259
+   "rewrite_expand_s": 0.007,
+   "embed_s": 0.226,
+   "rank_s": 0.005,
+   "rerank_s": 0.019,
+   "total_s": 0.257
   },
   "provider": "groq",
-  "model": "openai/gpt-oss-120b",
-  "latency_s": 1.97,
+  "model": "openai/gpt-oss-20b",
+  "latency_s": 1.54,
   "timing": {
    "attempts": [
     {
      "host": "api.groq.com",
      "ok": false,
      "code": 429,
-     "latency_s": 0.35
+     "latency_s": 0.33
     },
     {
      "host": "api.groq.com",
      "ok": false,
      "code": 429,
-     "latency_s": 0.22
-    },
-    {
-     "host": "api.groq.com",
-     "ok": false,
-     "code": 429,
-     "latency_s": 0.29
-    },
-    {
-     "host": "api.groq.com",
-     "ok": false,
-     "code": 429,
-     "latency_s": 0.25
-    },
-    {
-     "host": "api.groq.com",
-     "ok": false,
-     "code": 429,
-     "latency_s": 0.27
-    },
-    {
-     "host": "api.groq.com",
-     "ok": false,
-     "code": 429,
-     "latency_s": 0.31
-    },
-    {
-     "host": "api.groq.com",
-     "ok": false,
-     "code": 429,
-     "latency_s": 0.31
-    },
-    {
-     "host": "api.groq.com",
-     "ok": false,
-     "code": 429,
-     "latency_s": 0.32
-    },
-    {
-     "host": "api.groq.com",
-     "ok": false,
-     "code": 429,
-     "latency_s": 0.29
-    },
-    {
-     "host": "api.groq.com",
-     "ok": false,
-     "code": 429,
-     "latency_s": 0.24
-    },
-    {
-     "host": "api.groq.com",
-     "ok": false,
-     "code": 429,
-     "latency_s": 0.3
+     "latency_s": 0.37
     },
     {
      "host": "api.groq.com",
      "ok": true,
-     "latency_s": 1.97
+     "latency_s": 1.54
     }
    ],
-   "sleep_s": 10.0
+   "sleep_s": 0.0
   },
   "id": "sq-03"
  },
  {
   "question": "Tỷ lệ CASA của Techcombank năm 2025 là bao nhiêu?",
-  "answer": "Tỷ lệ CASA của Techcombank năm 2025 đạt **40,4%** [tr. 48, 5, 53].",
+  "answer": "Tỷ lệ CASA của Techcombank năm 2025 là **40,4 %** [tr. 48, 5, 53]",
   "citations": [
    48,
    5,
@@ -220,74 +268,28 @@
   "prompt_chars": 17424,
   "prompt_tokens_est": 4356,
   "timing_search": {
-   "rewrite_expand_s": 0.006,
-   "embed_s": 0.219,
-   "rank_s": 0.007,
-   "rerank_s": 0.019,
-   "total_s": 0.251
-  },
-  "provider": "groq",
-  "model": "openai/gpt-oss-120b",
-  "latency_s": 2.46,
-  "timing": {
-   "attempts": [
-    {
-     "host": "api.groq.com",
-     "ok": false,
-     "code": 429,
-     "latency_s": 0.33
-    },
-    {
-     "host": "api.groq.com",
-     "ok": true,
-     "latency_s": 2.46
-    }
-   ],
-   "sleep_s": 0.0
-  },
-  "id": "sq-04"
- },
- {
-  "question": "Tỷ lệ nợ xấu của Techcombank năm 2025 là bao nhiêu?",
-  "answer": "Tỷ lệ nợ xấu (NPL) của Techcombank năm 2025 là **1,13%**[tr. 5].",
-  "citations": [
-   5
-  ],
-  "retrieved_pages": [
-   15,
-   5,
-   48,
-   4,
-   90,
-   77,
-   98,
-   14
-  ],
-  "prompt_chars": 18591,
-  "prompt_tokens_est": 4647,
-  "timing_search": {
    "rewrite_expand_s": 0.001,
-   "embed_s": 0.22,
-   "rank_s": 0.005,
-   "rerank_s": 0.022,
-   "total_s": 0.248
+   "embed_s": 0.23,
+   "rank_s": 0.004,
+   "rerank_s": 0.021,
+   "total_s": 0.256
   },
   "provider": "groq",
-  "model": "openai/gpt-oss-120b",
-  "latency_s": 2.4,
+  "model": "openai/gpt-oss-20b",
+  "latency_s": 1.64,
   "timing": {
    "attempts": [
     {
      "host": "api.groq.com",
      "ok": false,
      "code": 429,
-     "latency_s": 0.28
+     "latency_s": 0.3
     },
     {
      "host": "api.groq.com",
      "ok": false,
      "code": 429,
-     "latency_s": 0.32
+     "latency_s": 0.25
     },
     {
      "host": "api.groq.com",
@@ -297,90 +299,15 @@
     },
     {
      "host": "api.groq.com",
-     "ok": true,
-     "latency_s": 2.4
-    }
-   ],
-   "sleep_s": 0.0
-  },
-  "id": "sq-05"
- },
- {
-  "question": "Tổng thu nhập hoạt động năm 2025 của Techcombank là bao nhiêu, và tốc độ tăng trưởng kép giai đoạn 2018–2025 của chỉ tiêu này là bao nhiêu?",
-  "answer": "Tổng thu nhập hoạt động năm 2025 của Techcombank là 53,4 nghìn tỷ đồng, tăng 13,6% so với năm trước; tốc độ tăng trưởng kép giai đoạn 2018–2025 là 16,5% [tr. 5, 48].",
-  "citations": [
-   5,
-   48
-  ],
-  "retrieved_pages": [
-   5,
-   59,
-   15,
-   14,
-   58,
-   94,
-   124,
-   48
-  ],
-  "prompt_chars": 15814,
-  "prompt_tokens_est": 3953,
-  "timing_search": {
-   "rewrite_expand_s": 0.001,
-   "embed_s": 0.253,
-   "rank_s": 0.007,
-   "rerank_s": 0.029,
-   "total_s": 0.29
-  },
-  "provider": "groq",
-  "model": "qwen/qwen3.8-27b",
-  "latency_s": 1.09,
-  "timing": {
-   "attempts": [
-    {
-     "host": "api.groq.com",
-     "ok": true,
-     "latency_s": 1.09
-    }
-   ],
-   "sleep_s": 0.0
-  },
-  "id": "sq-06"
- },
- {
-  "question": "Dư nợ vay của Khối Ngân hàng Bán lẻ năm 2025 là bao nhiêu và tăng bao nhiêu phần trăm so với năm trước?",
-  "answer": "Dư nợ vay của Khối Ngân hàng Bán lẻ năm 2025 là **328,1 nghìn tỷ đồng**, tăng **26,9 % so với năm 2024** [tr. 59].",
-  "citations": [
-   59
-  ],
-  "retrieved_pages": [
-   48,
-   4,
-   5,
-   15,
-   77,
-   14,
-   98,
-   59
-  ],
-  "prompt_chars": 17121,
-  "prompt_tokens_est": 4280,
-  "timing_search": {
-   "rewrite_expand_s": 0.005,
-   "embed_s": 0.216,
-   "rank_s": 0.003,
-   "rerank_s": 0.02,
-   "total_s": 0.244
-  },
-  "provider": "groq",
-  "model": "openai/gpt-oss-120b",
-  "latency_s": 1.54,
-  "timing": {
-   "attempts": [
+     "ok": false,
+     "code": 429,
+     "latency_s": 0.31
+    },
     {
      "host": "api.groq.com",
      "ok": false,
      "code": 429,
-     "latency_s": 0.24
+     "latency_s": 0.23
     },
     {
      "host": "api.groq.com",
@@ -392,50 +319,74 @@
      "host": "api.groq.com",
      "ok": false,
      "code": 429,
-     "latency_s": 0.31
+     "latency_s": 0.27
     },
     {
      "host": "api.groq.com",
      "ok": false,
      "code": 429,
-     "latency_s": 0.3
+     "latency_s": 0.28
     },
     {
      "host": "api.groq.com",
      "ok": false,
      "code": 429,
-     "latency_s": 0.31
+     "latency_s": 0.26
     },
     {
      "host": "api.groq.com",
      "ok": false,
      "code": 429,
-     "latency_s": 0.31
+     "latency_s": 0.26
     },
     {
      "host": "api.groq.com",
      "ok": false,
      "code": 429,
-     "latency_s": 0.3
+     "latency_s": 0.27
     },
     {
      "host": "api.groq.com",
-     "ok": false,
-     "code": 429,
-     "latency_s": 0.25
-    },
-    {
-     "host": "api.groq.com",
-     "ok": false,
-     "code": 429,
-     "latency_s": 0.25
-    },
-    {
-     "host": "api.groq.com",
-     "ok": false,
-     "code": 429,
-     "latency_s": 0.24
-    },
+     "ok": true,
+     "latency_s": 1.64
+    }
+   ],
+   "sleep_s": 0.0
+  },
+  "id": "sq-04"
+ },
+ {
+  "question": "Tỷ lệ nợ xấu của Techcombank năm 2025 là bao nhiêu?",
+  "answer": "Tỷ lệ nợ xấu của Techcombank năm 2025 là **1,13%**. Báo cáo không cung cấp thông tin về mức tăng/giảm so với năm 2024 (N/N).  \n[tr. 15, 5, 48]",
+  "citations": [
+   15,
+   5,
+   48
+  ],
+  "retrieved_pages": [
+   15,
+   5,
+   48,
+   4,
+   90,
+   77,
+   98,
+   14
+  ],
+  "prompt_chars": 18735,
+  "prompt_tokens_est": 4683,
+  "timing_search": {
+   "rewrite_expand_s": 0.001,
+   "embed_s": 0.291,
+   "rank_s": 0.008,
+   "rerank_s": 0.037,
+   "total_s": 0.337
+  },
+  "provider": "groq",
+  "model": "openai/gpt-oss-120b",
+  "latency_s": 2.36,
+  "timing": {
+   "attempts": [
     {
      "host": "api.groq.com",
      "ok": false,
@@ -444,17 +395,298 @@
     },
     {
      "host": "api.groq.com",
+     "ok": false,
+     "code": 429,
+     "latency_s": 0.31
+    },
+    {
+     "host": "api.groq.com",
+     "ok": false,
+     "code": 429,
+     "latency_s": 0.31
+    },
+    {
+     "host": "api.groq.com",
+     "ok": false,
+     "code": 429,
+     "latency_s": 0.31
+    },
+    {
+     "host": "api.groq.com",
+     "ok": false,
+     "code": 429,
+     "latency_s": 0.31
+    },
+    {
+     "host": "api.groq.com",
+     "ok": false,
+     "code": 429,
+     "latency_s": 0.31
+    },
+    {
+     "host": "api.groq.com",
+     "ok": false,
+     "code": 429,
+     "latency_s": 0.26
+    },
+    {
+     "host": "api.groq.com",
+     "ok": false,
+     "code": 429,
+     "latency_s": 0.26
+    },
+    {
+     "host": "api.groq.com",
+     "ok": false,
+     "code": 429,
+     "latency_s": 0.31
+    },
+    {
+     "host": "api.groq.com",
+     "ok": false,
+     "code": 429,
+     "latency_s": 0.3
+    },
+    {
+     "host": "api.groq.com",
+     "ok": false,
+     "code": 429,
+     "latency_s": 0.31
+    },
+    {
+     "host": "api.groq.com",
+     "ok": false,
+     "code": 429,
+     "latency_s": 0.25
+    },
+    {
+     "host": "api.groq.com",
+     "ok": false,
+     "code": 429,
+     "latency_s": 0.36
+    },
+    {
+     "host": "api.groq.com",
+     "ok": false,
+     "code": 429,
+     "latency_s": 0.31
+    },
+    {
+     "host": "api.groq.com",
+     "ok": false,
+     "code": 429,
+     "latency_s": 0.31
+    },
+    {
+     "host": "api.groq.com",
+     "ok": false,
+     "code": 429,
+     "latency_s": 0.35
+    },
+    {
+     "host": "api.groq.com",
+     "ok": false,
+     "code": 429,
+     "latency_s": 0.3
+    },
+    {
+     "host": "api.groq.com",
+     "ok": false,
+     "code": 429,
+     "latency_s": 0.26
+    },
+    {
+     "host": "api.groq.com",
+     "ok": false,
+     "code": 429,
+     "latency_s": 0.36
+    },
+    {
+     "host": "api.groq.com",
+     "ok": false,
+     "code": 429,
+     "latency_s": 0.31
+    },
+    {
+     "host": "api.groq.com",
+     "ok": false,
+     "code": 429,
+     "latency_s": 0.27
+    },
+    {
+     "host": "api.groq.com",
+     "ok": false,
+     "code": 429,
+     "latency_s": 0.34
+    },
+    {
+     "host": "api.groq.com",
+     "ok": false,
+     "code": 429,
+     "latency_s": 0.26
+    },
+    {
+     "host": "api.groq.com",
+     "ok": false,
+     "code": 429,
+     "latency_s": 0.35
+    },
+    {
+     "host": "api.groq.com",
+     "ok": false,
+     "code": 429,
+     "latency_s": 0.28
+    },
+    {
+     "host": "api.groq.com",
+     "ok": false,
+     "code": 429,
+     "latency_s": 0.34
+    },
+    {
+     "host": "api.groq.com",
+     "ok": false,
+     "code": 429,
+     "latency_s": 0.33
+    },
+    {
+     "host": "api.groq.com",
+     "ok": false,
+     "code": 429,
+     "latency_s": 0.39
+    },
+    {
+     "host": "api.groq.com",
+     "ok": false,
+     "code": 429,
+     "latency_s": 0.31
+    },
+    {
+     "host": "api.groq.com",
+     "ok": false,
+     "code": 429,
+     "latency_s": 0.31
+    },
+    {
+     "host": "api.groq.com",
+     "ok": false,
+     "code": 429,
+     "latency_s": 0.37
+    },
+    {
+     "host": "api.groq.com",
      "ok": true,
-     "latency_s": 1.54
+     "latency_s": 2.36
     }
    ],
-   "sleep_s": 10.0
+   "sleep_s": 30.0
+  },
+  "id": "sq-05"
+ },
+ {
+  "question": "Tổng thu nhập hoạt động năm 2025 của Techcombank là bao nhiêu, và tốc độ tăng trưởng kép giai đoạn 2018–2025 của chỉ tiêu này là bao nhiêu?",
+  "answer": "Tổng thu nhập hoạt động năm 2025 của Techcombank là **53,4 nghìn tỷ đồng** [tr. 5, 48], và tốc độ tăng trưởng kép giai đoạn 2018–2025 của chỉ tiêu này là **16,5 %** [tr. 5].",
+  "citations": [
+   5,
+   48,
+   5
+  ],
+  "retrieved_pages": [
+   5,
+   59,
+   15,
+   14,
+   58,
+   94,
+   124,
+   48
+  ],
+  "prompt_chars": 15958,
+  "prompt_tokens_est": 3989,
+  "timing_search": {
+   "rewrite_expand_s": 0.004,
+   "embed_s": 0.775,
+   "rank_s": 0.023,
+   "rerank_s": 0.128,
+   "total_s": 0.929
+  },
+  "provider": "groq",
+  "model": "openai/gpt-oss-20b",
+  "latency_s": 1.98,
+  "timing": {
+   "attempts": [
+    {
+     "host": "api.groq.com",
+     "ok": false,
+     "code": 429,
+     "latency_s": 0.45
+    },
+    {
+     "host": "api.groq.com",
+     "ok": false,
+     "code": 429,
+     "latency_s": 0.27
+    },
+    {
+     "host": "api.groq.com",
+     "ok": true,
+     "latency_s": 1.98
+    }
+   ],
+   "sleep_s": 0.0
+  },
+  "id": "sq-06"
+ },
+ {
+  "question": "Dư nợ vay của Khối Ngân hàng Bán lẻ năm 2025 là bao nhiêu và tăng bao nhiêu phần trăm so với năm trước?",
+  "answer": "Dư nợ vay của Khối Ngân hàng Bán lẻ năm 2025 là 328,1 nghìn tỷ đồng, tăng 26,9% so với năm trước (26,9% N/N) [tr. 59].",
+  "citations": [
+   59
+  ],
+  "retrieved_pages": [
+   15,
+   59,
+   58,
+   14,
+   71,
+   214,
+   77,
+   79
+  ],
+  "prompt_chars": 17738,
+  "prompt_tokens_est": 4434,
+  "timing_search": {
+   "rewrite_expand_s": 0.008,
+   "embed_s": 0.235,
+   "rank_s": 0.008,
+   "rerank_s": 0.031,
+   "total_s": 0.283
+  },
+  "provider": "gemini",
+  "model": "gemini-3.5-flash",
+  "latency_s": 3.68,
+  "finish": "STOP",
+  "timing": {
+   "attempts": [
+    {
+     "host": "generativelanguage.googleapis.com",
+     "ok": false,
+     "code": 429,
+     "latency_s": 0.68
+    },
+    {
+     "host": "generativelanguage.googleapis.com",
+     "ok": true,
+     "latency_s": 3.68
+    }
+   ],
+   "sleep_s": 0.0
   },
   "id": "sq-07"
  },
  {
   "question": "Theo danh mục thuật ngữ viết tắt của báo cáo, RBG là viết tắt của khối nào?",
-  "answer": "RBG là viết tắt của **Khối Ngân hàng Bán lẻ**[tr. 387].",
+  "answer": "RBG là viết tắt của Khối Ngân hàng Bán lẻ. [tr. 387]",
   "citations": [
    387
   ],
@@ -469,140 +701,25 @@
    387,
    159
   ],
-  "prompt_chars": 16026,
-  "prompt_tokens_est": 4006,
+  "prompt_chars": 16170,
+  "prompt_tokens_est": 4042,
   "timing_search": {
-   "rewrite_expand_s": 0.002,
-   "embed_s": 0.226,
-   "rank_s": 0.005,
-   "rerank_s": 0.032,
-   "total_s": 0.265
+   "rewrite_expand_s": 0.003,
+   "embed_s": 0.694,
+   "rank_s": 0.015,
+   "rerank_s": 0.168,
+   "total_s": 0.879
   },
   "provider": "groq",
-  "model": "openai/gpt-oss-120b",
-  "latency_s": 1.44,
+  "model": "openai/gpt-oss-20b",
+  "latency_s": 0.89,
   "timing": {
    "attempts": [
     {
      "host": "api.groq.com",
      "ok": false,
      "code": 429,
-     "latency_s": 0.34
-    },
-    {
-     "host": "api.groq.com",
-     "ok": false,
-     "code": 429,
-     "latency_s": 0.31
-    },
-    {
-     "host": "api.groq.com",
-     "ok": false,
-     "code": 429,
-     "latency_s": 0.31
-    },
-    {
-     "host": "api.groq.com",
-     "ok": false,
-     "code": 429,
-     "latency_s": 0.32
-    },
-    {
-     "host": "api.groq.com",
-     "ok": false,
-     "code": 429,
-     "latency_s": 0.29
-    },
-    {
-     "host": "api.groq.com",
-     "ok": true,
-     "latency_s": 1.44
-    }
-   ],
-   "sleep_s": 0.0
-  },
-  "id": "sq-08"
- },
- {
-  "question": "Theo danh mục thuật ngữ viết tắt của báo cáo, CASA là viết tắt của thuật ngữ gì?",
-  "answer": "CASA là viết tắt của “Tiền gửi không kỳ hạn”[tr. 386].",
-  "citations": [
-   386
-  ],
-  "retrieved_pages": [
-   386,
-   386,
-   387,
-   3,
-   386,
-   329,
-   328,
-   347,
-   346
-  ],
-  "prompt_chars": 16680,
-  "prompt_tokens_est": 4170,
-  "timing_search": {
-   "rewrite_expand_s": 0.006,
-   "embed_s": 0.224,
-   "rank_s": 0.006,
-   "rerank_s": 0.024,
-   "total_s": 0.261
-  },
-  "provider": "groq",
-  "model": "openai/gpt-oss-120b",
-  "latency_s": 1.63,
-  "timing": {
-   "attempts": [
-    {
-     "host": "api.groq.com",
-     "ok": false,
-     "code": 429,
-     "latency_s": 0.34
-    },
-    {
-     "host": "api.groq.com",
-     "ok": true,
-     "latency_s": 1.63
-    }
-   ],
-   "sleep_s": 0.0
-  },
-  "id": "sq-09"
- },
- {
-  "question": "Techcombank dự báo lợi nhuận trước thuế năm 2027 là bao nhiêu?",
-  "answer": "Không có trong báo cáo. Báo cáo thường niên 2025 không đề cập nội dung này nên tôi không suy đoán.",
-  "citations": [],
-  "retrieved_pages": [
-   77,
-   15,
-   14,
-   48,
-   76,
-   5,
-   84,
-   85
-  ],
-  "prompt_chars": 16937,
-  "prompt_tokens_est": 4234,
-  "timing_search": {
-   "rewrite_expand_s": 0.001,
-   "embed_s": 0.212,
-   "rank_s": 0.006,
-   "rerank_s": 0.02,
-   "total_s": 0.239
-  },
-  "provider": "groq",
-  "model": "openai/gpt-oss-120b",
-  "latency_s": 1.31,
-  "timing": {
-   "attempts": [
-    {
-     "host": "api.groq.com",
-     "ok": false,
-     "code": 429,
-     "latency_s": 0.35
+     "latency_s": 0.39
     },
     {
      "host": "api.groq.com",
@@ -627,6 +744,18 @@
      "ok": false,
      "code": 429,
      "latency_s": 0.31
+    },
+    {
+     "host": "api.groq.com",
+     "ok": false,
+     "code": 429,
+     "latency_s": 0.25
+    },
+    {
+     "host": "api.groq.com",
+     "ok": false,
+     "code": 429,
+     "latency_s": 0.36
     },
     {
      "host": "api.groq.com",
@@ -644,19 +773,7 @@
      "host": "api.groq.com",
      "ok": false,
      "code": 429,
-     "latency_s": 0.31
-    },
-    {
-     "host": "api.groq.com",
-     "ok": false,
-     "code": 429,
-     "latency_s": 0.31
-    },
-    {
-     "host": "api.groq.com",
-     "ok": false,
-     "code": 429,
-     "latency_s": 0.22
+     "latency_s": 0.41
     },
     {
      "host": "api.groq.com",
@@ -667,10 +784,203 @@
     {
      "host": "api.groq.com",
      "ok": true,
-     "latency_s": 1.31
+     "latency_s": 0.89
+    }
+   ],
+   "sleep_s": 0.0
+  },
+  "id": "sq-08"
+ },
+ {
+  "question": "Theo danh mục thuật ngữ viết tắt của báo cáo, CASA là viết tắt của thuật ngữ gì?",
+  "answer": "CASA là viết tắt của “Tiền gửi không kỳ hạn” [tr. 386]",
+  "citations": [
+   386
+  ],
+  "retrieved_pages": [
+   386,
+   386,
+   387,
+   3,
+   386,
+   329,
+   328,
+   347,
+   346
+  ],
+  "prompt_chars": 16680,
+  "prompt_tokens_est": 4170,
+  "timing_search": {
+   "rewrite_expand_s": 0.001,
+   "embed_s": 0.226,
+   "rank_s": 0.008,
+   "rerank_s": 0.026,
+   "total_s": 0.261
+  },
+  "provider": "groq",
+  "model": "openai/gpt-oss-20b",
+  "latency_s": 1.22,
+  "timing": {
+   "attempts": [
+    {
+     "host": "api.groq.com",
+     "ok": false,
+     "code": 429,
+     "latency_s": 0.24
+    },
+    {
+     "host": "api.groq.com",
+     "ok": false,
+     "code": 429,
+     "latency_s": 0.23
+    },
+    {
+     "host": "api.groq.com",
+     "ok": false,
+     "code": 413,
+     "latency_s": 0.27
+    },
+    {
+     "host": "api.groq.com",
+     "ok": false,
+     "code": 429,
+     "latency_s": 0.25
+    },
+    {
+     "host": "api.groq.com",
+     "ok": false,
+     "code": 429,
+     "latency_s": 0.29
+    },
+    {
+     "host": "api.groq.com",
+     "ok": false,
+     "code": 429,
+     "latency_s": 0.23
+    },
+    {
+     "host": "api.groq.com",
+     "ok": false,
+     "code": 429,
+     "latency_s": 0.23
+    },
+    {
+     "host": "api.groq.com",
+     "ok": false,
+     "code": 429,
+     "latency_s": 0.24
+    },
+    {
+     "host": "api.groq.com",
+     "ok": false,
+     "code": 413,
+     "latency_s": 0.22
+    },
+    {
+     "host": "api.groq.com",
+     "ok": false,
+     "code": 429,
+     "latency_s": 0.25
+    },
+    {
+     "host": "api.groq.com",
+     "ok": false,
+     "code": 429,
+     "latency_s": 0.25
+    },
+    {
+     "host": "api.groq.com",
+     "ok": false,
+     "code": 413,
+     "latency_s": 0.24
+    },
+    {
+     "host": "api.groq.com",
+     "ok": false,
+     "code": 429,
+     "latency_s": 0.24
+    },
+    {
+     "host": "api.groq.com",
+     "ok": false,
+     "code": 429,
+     "latency_s": 0.22
+    },
+    {
+     "host": "api.groq.com",
+     "ok": false,
+     "code": 413,
+     "latency_s": 0.22
+    },
+    {
+     "host": "api.groq.com",
+     "ok": false,
+     "code": 429,
+     "latency_s": 0.25
+    },
+    {
+     "host": "api.groq.com",
+     "ok": false,
+     "code": 429,
+     "latency_s": 0.32
+    },
+    {
+     "host": "api.groq.com",
+     "ok": true,
+     "latency_s": 1.22
     }
    ],
    "sleep_s": 10.0
+  },
+  "id": "sq-09"
+ },
+ {
+  "question": "Techcombank dự báo lợi nhuận trước thuế năm 2027 là bao nhiêu?",
+  "answer": "Không có trong báo cáo. Báo cáo thường niên 2025 không đề cập nội dung này nên tôi không suy đoán.",
+  "citations": [],
+  "retrieved_pages": [
+   77,
+   15,
+   14,
+   48,
+   76,
+   5,
+   84,
+   85
+  ],
+  "prompt_chars": 17081,
+  "prompt_tokens_est": 4270,
+  "timing_search": {
+   "rewrite_expand_s": 0.001,
+   "embed_s": 0.573,
+   "rank_s": 0.011,
+   "rerank_s": 0.067,
+   "total_s": 0.653
+  },
+  "provider": "groq",
+  "model": "openai/gpt-oss-20b",
+  "latency_s": 1.03,
+  "timing": {
+   "attempts": [
+    {
+     "host": "api.groq.com",
+     "ok": false,
+     "code": 429,
+     "latency_s": 0.31
+    },
+    {
+     "host": "api.groq.com",
+     "ok": false,
+     "code": 429,
+     "latency_s": 0.31
+    },
+    {
+     "host": "api.groq.com",
+     "ok": true,
+     "latency_s": 1.03
+    }
+   ],
+   "sleep_s": 0.0
   },
   "id": "sq-10"
  }

@@ -72,6 +72,14 @@ _FOLLOWUP_RE = re.compile(
     r"còn(?![a-zà-ỹ])|con\s+|thì sao|thi sao|năm trước|nam truoc|cũng vậy|cung vay",
     re.I,
 )
+# Cụm so sánh YoY ("tăng ... so với năm trước") là câu hỏi HOÀN CHỈNH,
+# không phải follow-up — phải loại trừ TRƯỚC khi detect follow-up
+# (bug thật: sq-07 bị viết lại thành chủ đề câu trước trong batch).
+_COMPARISON_RE = re.compile(
+    r"so\s+với\s+(năm\s+trước|nam\s+truoc|cùng\s*kỳ|cung\s*ky)|"
+    r"(tăng|giảm|tang|giam|thay đổi|thay doi).{0,20}so\s+với",
+    re.I,
+)
 
 
 def rewrite(query: str, history: list[str] | None = None) -> str:
@@ -83,6 +91,8 @@ def rewrite(query: str, history: list[str] | None = None) -> str:
     """
     history = [h for h in (history or []) if h]
     ql = query.lower()
+    if _COMPARISON_RE.search(ql):
+        return query
     if not (history and _FOLLOWUP_RE.search(ql)):
         return query
     # tìm câu hỏi gần nhất CÓ năm làm chủ đề
