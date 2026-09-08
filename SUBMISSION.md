@@ -44,7 +44,12 @@
 ## 5. Cost & latency (đo thực, không ước)
 - Ingestion một lần: ~2min text+header+tables (602 chunks), ~2min glossary scan, embeddings (Gemini free, 2s/call, cache resume — batch mới chỉ tốn quota cho chunk chưa có).
 - Index ship: `index/` ~6MB trong repo (chunks 1.6MB, faiss 1.2MB, bm25 3MB, embed_cache 650 vectors).
-- Mỗi query đo được: retrieval ~0.2s (CPU, 602 chunks) + generation: qwen/groq ~0.5–1.5s → **~1–2s/query end-to-end**.
+- Mỗi query đo thực (Step 0 timing breakdown in REPL + `timing` trong out.json):
+  - Quota còn, hit lần đầu: retrieval ~0.3s (embed ~0.25s) + LLM 0.5–2s → **2–4s/câu**, prompt ~3.6–4.3k tokens.
+  - Dính 429 vài combo (xoay key/model ngay, chưa sleep): +5–15s → **10–20s/câu**.
+  - Hết 1–2 vòng xoay, sleep 1–2 lần (30s/60s): **35s–2 phút/câu**.
+  - Quota chết hẳn: ~90s sleeps + ~10 calls → **2–3 phút rồi báo LỖI KỸ THUẬT** (fail rõ ràng thay vì treo).
+  - `BACKOFF_BASE_S` (mặc định 30): REPL đặt 10 để failover nhanh (worst-sleep 30s thay vì 90s).
 - Tiền: $0 (Gemini free-tier cho embedding + Groq free cho generation). Fallback TF-IDF offline: $0.
 - Hạ tầng thực tế: quota Gemini generate free-tier cực tight (provider chain gemini→groq là path mặc định).
 

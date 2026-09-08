@@ -7,6 +7,15 @@ import urllib.request
 from src.config import get_settings
 
 
+def _backoff_base() -> float:
+    """Giây sleep cơ số khi 429/503. BACKOFF_BASE_S (mặc định 30):
+    REPL có thể đặt 10 để failover nhanh, batch nền giữ 30."""
+    try:
+        return max(0.0, float(os.getenv("BACKOFF_BASE_S", "30")))
+    except ValueError:
+        return 30.0
+
+
 def _post(url: str, payload: dict, headers: dict, timeout: int = 120,
           retries: int = 3, stats: dict | None = None) -> dict:
     import time as _time
@@ -40,7 +49,7 @@ def _post(url: str, payload: dict, headers: dict, timeout: int = 120,
                      "code": e.code, "latency_s": round(time.time() - t0, 2)})
             if e.code in (429, 503) and attempt < retries - 1:
                 # Free-tier RPM window ~60s: backoff ngắn hơn vô dụng (đã đo).
-                wait = 30 * (attempt + 1)
+                wait = _backoff_base() * (attempt + 1)
                 if stats is not None:
                     stats["sleep_s"] = round(stats.get("sleep_s", 0.0) + wait, 1)
                 _time.sleep(wait)
@@ -54,37 +63,68 @@ def _keys(*names: str) -> list[str]:
     return [v for v in (os.getenv(n, "") for n in names) if v]
 
 
+def _run_rounds(thunks: list, stats: dict | None, max_rounds: int = 3):
+    """Failover nhanh: xoay HẾT combo (key×model) trước khi sleep.
+
+    Chỉ sleep khi TẤT CẢ combo đều 429/503 trong vòng đó; lỗi khác
+    (400/403/ValueError) xoay ngay không chờ. Sleep giữa các vòng:
+    base, 2*base (base = BACKOFF_BASE_S, mặc định 30s).
+    """
+    import time as _time
+    import urllib.error
+
+    last_err: Exception | None = RuntimeError("no provider combos")
+    for rnd in range(max_rounds):
+        saw_429 = False
+        for thunk in thunks:
+            try:
+                return thunk()
+            except urllib.error.HTTPError as e:
+                last_err = e
+                if e.code in (429, 503):
+                    saw_429 = True
+                continue
+            except Exception as e:
+                last_err = e
+                continue
+        if not saw_429 or rnd >= max_rounds - 1:
+            break
+        wait = _backoff_base() * (rnd + 1)
+        if stats is not None:
+            stats["sleep_s"] = round(stats.get("sleep_s", 0.0) + wait, 1)
+        _time.sleep(wait)
+    raise last_err  # type: ignore[misc]
+
+
 def _try_groq(messages: list[dict], max_tokens: int, temperature: float,
               stats: dict | None = None) -> tuple[str, dict]:
-    last_err: Exception | None = None
     # qwen3.8 trả content trực tiếp; gpt-oss là reasoning model (nghĩ trong
     # message.reasoning, content rỗng) -> chỉ dùng dự phòng.
     models = [m.strip() for m in
               os.getenv("GEN_MODELS_GROQ",
                         os.getenv("GEN_MODEL", "qwen/qwen3.8-27b,openai/gpt-oss-120b")).split(",")
               if m.strip()]
-    for key in _keys("GROQ_API_KEY", "GROQ_API_KEY_2"):
-        for model in models:
-            try:
-                data = _post(
-                    "https://api.groq.com/openai/v1/chat/completions",
-                    {"model": model, "messages": messages,
-                     "max_tokens": max_tokens, "temperature": temperature},
-                    {"Authorization": "Bearer " + key, "Content-Type": "application/json"},
-                    retries=2, stats=stats,
-                )
-                text = data["choices"][0]["message"]["content"] or ""
-                if not text.strip():
-                    raise ValueError(f"{model} returned empty content (reasoning model)")
-                usage = {"provider": "groq", "model": model,
-                         "latency_s": data.get("_latency_s")}
-                if stats is not None:
-                    usage["timing"] = stats
-                return text, usage
-            except Exception as e:
-                last_err = e
-                continue
-    raise last_err  # type: ignore[misc]
+    keys = _keys("GROQ_API_KEY", "GROQ_API_KEY_2")
+
+    def _call(key: str, model: str) -> tuple[str, dict]:
+        data = _post(
+            "https://api.groq.com/openai/v1/chat/completions",
+            {"model": model, "messages": messages,
+             "max_tokens": max_tokens, "temperature": temperature},
+            {"Authorization": "Bearer " + key, "Content-Type": "application/json"},
+            retries=1, stats=stats,  # fail nhanh, sleep để vòng sau lo
+        )
+        text = data["choices"][0]["message"]["content"] or ""
+        if not text.strip():
+            raise ValueError(f"{model} returned empty content (reasoning model)")
+        usage = {"provider": "groq", "model": model,
+                 "latency_s": data.get("_latency_s")}
+        if stats is not None:
+            usage["timing"] = stats
+        return text, usage
+
+    return _run_rounds(
+        [lambda k=k, m=m: _call(k, m) for k in keys for m in models], stats)
 
 
 def _try_gemini(messages: list[dict], max_tokens: int, temperature: float,
@@ -93,38 +133,35 @@ def _try_gemini(messages: list[dict], max_tokens: int, temperature: float,
     models = [m.strip() for m in
               os.getenv("GEN_MODELS", os.getenv("GEN_MODEL", "gemini-3.5-flash")).split(",")
               if m.strip()]
-    last_err: Exception | None = None
-    for key in keys:
-        for model in models:
-            prompt = "\n\n".join(m.get("content", "") for m in messages)
-            # 3.5 thinking ngầm ăn hết output budget -> tắt hẳn.
-            # 3.6 không nhận thinkingConfig (400) -> không gửi.
-            gen_cfg = ({"maxOutputTokens": max_tokens, "temperature": temperature,
-                        "thinkingConfig": {"thinkingBudget": 0}}
-                       if "3.5" in model else
-                       {"maxOutputTokens": max_tokens, "temperature": temperature})
-            try:
-                data = _post(
-                    f"https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent?key={key}",
-                    {"contents": [{"parts": [{"text": prompt}]}],
-                     "generationConfig": gen_cfg},
-                    {"Content-Type": "application/json"},
-                    retries=2, stats=stats,
-                )
-                text = "".join(
-                    part.get("text", "")
-                    for part in data["candidates"][0]["content"].get("parts", [])
-                )
-                usage = {"provider": "gemini", "model": model,
-                         "latency_s": data.get("_latency_s"),
-                         "finish": data["candidates"][0].get("finishReason")}
-                if stats is not None:
-                    usage["timing"] = stats
-                return text, usage
-            except Exception as e:
-                last_err = e
-                continue
-    raise last_err  # type: ignore[misc]
+
+    def _call(key: str, model: str) -> tuple[str, dict]:
+        prompt = "\n\n".join(m.get("content", "") for m in messages)
+        # 3.5 thinking ngầm ăn hết output budget -> tắt hẳn.
+        # 3.6 không nhận thinkingConfig (400) -> không gửi.
+        gen_cfg = ({"maxOutputTokens": max_tokens, "temperature": temperature,
+                    "thinkingConfig": {"thinkingBudget": 0}}
+                   if "3.5" in model else
+                   {"maxOutputTokens": max_tokens, "temperature": temperature})
+        data = _post(
+            f"https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent?key={key}",
+            {"contents": [{"parts": [{"text": prompt}]}],
+             "generationConfig": gen_cfg},
+            {"Content-Type": "application/json"},
+            retries=1, stats=stats,  # fail nhanh, sleep để vòng sau lo
+        )
+        text = "".join(
+            part.get("text", "")
+            for part in data["candidates"][0]["content"].get("parts", [])
+        )
+        usage = {"provider": "gemini", "model": model,
+                 "latency_s": data.get("_latency_s"),
+                 "finish": data["candidates"][0].get("finishReason")}
+        if stats is not None:
+            usage["timing"] = stats
+        return text, usage
+
+    return _run_rounds(
+        [lambda k=k, m=m: _call(k, m) for k in keys for m in models], stats)
 
 
 def _try_openrouter(messages: list[dict], max_tokens: int,

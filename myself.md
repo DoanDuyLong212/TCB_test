@@ -123,10 +123,10 @@ Pipeline query: `rewrite` (multi-turn) → `expand_query` (glossary + synonyms h
 | Chunks | **602** (377 narrative + 225 table markdown) |
 | Glossary | 164 thuật ngữ, CASA→386, RBG→387 |
 | Query không dấu | 5/5 (trước fix 4/8) nhờ bigram stripped-space + fix bug Đ/đ |
-| Latency/query | ~1–2s (retrieval ~0.2s + qwen ~0.5–1.5s) |
+| Latency/query | best 2–4s · dính 429: 10–20s · sleep vòng: 35s–2ph · chết hẳn: ~3ph fail rõ (`BACKOFF_BASE_S`, đo Step 0) |
 | Ingestion | ~1.5min text+tables + ~2min glossary + embeddings (free, cache 650 vectors) |
 | Cost | $0 (Gemini embed free + Groq free) |
-| Tests | **26 pytest pass** |
+| Tests | **32 pytest pass** |
 
 ### 2.8. Vòng nâng cấp P0–P2 (điểm mới cần thuộc)
 
