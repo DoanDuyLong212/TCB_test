@@ -29,6 +29,7 @@
 - Thử `openai/gpt-oss-120b` (groq) → content rỗng vì là reasoning model (nghĩ trong `message.reasoning`, finish=length) → đảo qwen lên chính, gpt-oss dự phòng + chặn content rỗng.
 - Extra set bắt lỗi thật: ex-05 hỏi đọc số "1.192 nghìn tỷ" → model diễn giải sai thành "1.192 tỷ" (sai 1000x — đúng bẫy trong đề) → thêm rule "trích nguyên văn, không diễn giải thành chữ" vào prompt → rerun ex-05 đúng ngay.
 - Extra set bắt false refusal: ex-13 (thu nhập lãi thuần RBG) → figure nằm trong chunk infographic rối ("Thu nhập lãi thuần 9,4% N/N21,9 15,7% N/N") → model không dám trích → refusal. Chưa fix (chunk infographic là debt của Track 1, xem mục 8).
+- Follow-up "năm trước thì sao" (user bắt live): đảo chiều tăng trưởng ("2024 tăng 21,82% so với 2025") + đổ cả bảng thay vì 1 chỉ tiêu → thêm rule 8 (một chỉ tiêu → một con số) + rule 9 (chiều so sánh năm sau-vs-năm trước; cách đọc bảng 2 dòng tiêu đề). Sau fix: 978.799 [tr. 14] đúng, hết đảo chiều/số rác; model nhỏ vẫn liệt kê cả bảng khi câu mơ hồ — trade-off đã ghi (war story 4.13 myself.md).
 
 ## 4. Eval numbers (phương pháp + số)
 - Phương pháp: deterministic (key numbers + gold-citation match + refusal check + citation-valid + normalize Unicode biến thể không đổi nghĩa số) + **manual đọc toàn bộ** + 2-judge cross-check (`eval/judge_compare.py`, qwen/groq + gemini).

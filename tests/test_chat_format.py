@@ -16,6 +16,14 @@ def test_prompt_prefers_summary_pages():
     assert "Điểm nhấn" in p or "tóm tắt" in p
 
 
+def test_prompt_followup_scope_and_direction():
+    # regression cho bug follow-up: đảo chiều tăng trưởng + đổ cả bảng.
+    # Chỉ kiểm tra prompt chứa rule (không gọi LLM thật để khỏi tốn quota).
+    p = build_prompt("kết quả năm trước?", contexts=[{"text": "t", "printed_page": 14}])
+    assert "năm sau so với năm trước" in p
+    assert "MỘT chỉ tiêu" in p or "MỘT chủ thể" in p
+
+
 def test_normalize_bracket_citations():
     # gpt-oss dự phòng hay xuất fullwidth brackets
     assert normalize_citations("【tr. 386】") == "[tr. 386]"

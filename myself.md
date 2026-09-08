@@ -230,6 +230,12 @@ Pipeline query: `rewrite` (multi-turn) → `expand_query` (glossary + synonyms h
 - **Fix:** không đụng metric để "làm đẹp" — báo cáo cả 2 lớp: strict gold-page 9/10, citation-valid 10/10, semantic judge 10/10. Normalize Unicode biến thể (U+2011, space-%) là phép biến đổi KHÔNG đổi nghĩa số.
 - **Lesson:** metric khắt khe hơn con người cũng là một dạng noise; tách lớp "sai thật" khỏi lớp "khác gold nhưng đúng" — đó chính là lý do có citation_valid.
 
+### 4.13. Follow-up "năm trước thì sao" trả lời sai chiều + đổ cả bảng
+- **Symptom (user bắt live):** "kết quả của năm trước thì sao" → "Tổng tài sản 2024: 978.799 (tăng 21,82% **so với 2025**)" — đảo chiều tăng trưởng (21,82% là của 2025 so với 2024) + lôi số không liên quan (dự phòng tr.335) + câu cụt.
+- **Diagnosis:** 2 lỗi generation độc lập: (1) model không giữ chiều so sánh thời gian; (2) model dump cả chunk bảng thay vì 1 chỉ tiêu được hỏi. Retrieval đúng (tr.14 có cột 2024) — không đụng retrieval.
+- **Fix:** rule 8 (một chỉ tiêu → một con số, cấm liệt kê/kết luận thiếu số liệu) + rule 9 hai phần: (a) % N/N luôn thuộc năm sau so với năm trước, viết rõ chiều; (b) cách đọc bảng 2 dòng tiêu đề (cột 2024 = thực hiện năm trước, ô trống không lệch cột). Sau fix: hết đảo chiều, hết số rác, 978.799 [tr. 14] đúng — nhưng model nhỏ vẫn liệt kê 4 dòng của bảng khi câu follow-up mơ hồ ("kết quả").
+- **Lesson + giới hạn trung thực:** 3 vòng prompt hết cải thiện → dừng (mỗi vòng tốn quota). Với câu mơ hồ, liệt kê đúng-có-cite tốt hơn từ chối/ảo giác; đây là trade-off model nhỏ, model lớn hơn hoặc structured-extraction mới triệt để.
+
 ---
 
 ## PHẦN 5 — Q&A PHỎNG VẤN DỰ KIẾN (why X over Y)
